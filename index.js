@@ -7,13 +7,20 @@ const typeDefs = gql`
 
 	type Action {
 		id: ID!
+		"campaign which belongs to"
+		campaignId: ID!
+		"title of the action"
 		title: String!
+		"description of the action"
 		description: String!
 	}
 
 	type Campaign {
 		id: ID!
+		"human redable identifier"
 		slug: String!
+		"group of actions for a given campaign"
+		actions: [Action]!
 	}
 
 	type Query {
@@ -24,7 +31,13 @@ const typeDefs = gql`
 const campaigns = [
 	{
 		id: 1,
-		slug: "student-debt-campaign"
+		slug: "student-debt-campaign",
+		actions: [
+			{
+				title: "Visit our Facebook page",
+				description: "Go to our facebook page and click like button"
+			}
+		]
 	}
 ];
 
