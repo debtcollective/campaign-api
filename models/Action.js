@@ -20,7 +20,7 @@ class Action extends Model {
 
 	static get relationMappings() {
 		return {
-			actors: {
+			campaigns: {
 				relation: Model.ManyToManyRelation,
 				modelClass: __dirname + "/Campaign",
 				join: {
