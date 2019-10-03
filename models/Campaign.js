@@ -1,5 +1,4 @@
 const { Model } = require("objection");
-const Action = require("./Action");
 
 class Campaign extends Model {
 	static get tableName() {
@@ -23,7 +22,7 @@ class Campaign extends Model {
 		return {
 			actions: {
 				relation: Model.ManyToManyRelation,
-				modelClass: Action,
+				modelClass: __dirname + "/Action",
 				join: {
 					from: "campaigns.id",
 					through: {
