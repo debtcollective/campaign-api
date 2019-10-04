@@ -1,4 +1,15 @@
 module.exports = {
+	testing: {
+		client: "postgresql",
+		connection: {
+			database: "social-giveaways-service-testing"
+		},
+		pool: {
+			min: 2,
+			max: 10
+		}
+	},
+
 	development: {
 		client: "postgresql",
 		connection: {

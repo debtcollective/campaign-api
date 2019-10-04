@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "dropdb social-giveaways-service-testing && createdb social-giveaways-service-testing -U alexis && npx knex migrate:latest --env='testing' && npx jest --watch",
     "migrate": "knex migrate:latest",
     "start": "npm run migrate && node index"
   },
@@ -17,5 +17,9 @@
     "knex": "^0.19.4",
     "objection": "^1.6.11",
     "pg": "^7.12.1"
+  },
+  "devDependencies": {
+    "faker": "^4.1.0",
+    "jest": "^24.9.0"
   }
 }
