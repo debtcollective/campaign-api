@@ -25,12 +25,6 @@ beforeAll(async () => {
 	await Campaign.query().delete();
 });
 
-afterAll(async () => {
-	await User.query().delete();
-	await Action.query().delete();
-	await Campaign.query().delete();
-});
-
 describe("model structure", () => {
 	it("allows to insert actions related to a campaign", async () => {
 		const campaign = await Campaign.query().insert(createCampaign());
@@ -51,7 +45,7 @@ describe("model structure", () => {
 		expect(campaign.id).toBeTruthy();
 	});
 
-	it("allows to query actions by user", async () => {
+	xit("allows to query actions by user", async () => {
 		const user = await User.query().insert(createUser());
 		const campaign = await user
 			.$relatedQuery("campaign")
@@ -59,6 +53,7 @@ describe("model structure", () => {
 		const actions = await campaign
 			.$relatedQuery("actions")
 			.insert(createActions());
+		// TODO: query the user by id and try to get his actions
 
 		expect(user.id).toBeTruthy();
 		expect(campaign.id).toBeTruthy();
