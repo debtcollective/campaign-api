@@ -20,6 +20,14 @@ class Campaign extends Model {
 
 	static get relationMappings() {
 		return {
+			users: {
+				relation: Model.HasManyRelation,
+				modelClass: __dirname + "/User",
+				join: {
+					from: "campaigns.id",
+					to: "users.campaignId"
+				}
+			},
 			actions: {
 				relation: Model.ManyToManyRelation,
 				modelClass: __dirname + "/Action",
