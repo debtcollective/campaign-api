@@ -1,3 +1,18 @@
+/**
+ * Objection related code
+ */
+const Knex = require("knex");
+const knexConfig = require("./knexfile");
+const { Model } = require("objection");
+const { Campaign } = require("./models/Campaign");
+
+// Initialize knex.
+const knex = Knex(knexConfig.development);
+Model.knex(knex);
+
+/**
+ * GraphQL
+ */
 const { ApolloServer, gql } = require("apollo-server");
 
 const typeDefs = gql`
@@ -28,22 +43,12 @@ const typeDefs = gql`
 	}
 `;
 
-const campaigns = [
-	{
-		id: 1,
-		slug: "student-debt-campaign",
-		actions: [
-			{
-				title: "Visit our Facebook page",
-				description: "Go to our facebook page and click like button"
-			}
-		]
-	}
-];
-
 const resolvers = {
 	Query: {
-		campaigns: () => campaigns
+		campaigns: async () => {
+			const campaigns = await Campaign.query().eager("actions");
+			return campaigns;
+		}
 	}
 };
 
