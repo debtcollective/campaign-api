@@ -20,15 +20,11 @@ class Action extends Model {
 
 	static get relationMappings() {
 		return {
-			campaigns: {
-				relation: Model.ManyToManyRelation,
+			campaign: {
+				relation: Model.BelongsToOneRelation,
 				modelClass: __dirname + "/Campaign",
 				join: {
-					from: "actions.id",
-					through: {
-						from: "campaigns_actions.actionId",
-						to: "campaigns_actions.campaignId"
-					},
+					from: "actions.campaignId",
 					to: "campaigns.id"
 				}
 			}

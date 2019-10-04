@@ -29,15 +29,11 @@ class Campaign extends Model {
 				}
 			},
 			actions: {
-				relation: Model.ManyToManyRelation,
+				relation: Model.HasManyRelation,
 				modelClass: __dirname + "/Action",
 				join: {
 					from: "campaigns.id",
-					through: {
-						from: "campaigns_actions.campaignId",
-						to: "campaigns_actions.actionId"
-					},
-					to: "actions.id"
+					to: "actions.campaignId"
 				}
 			}
 		};
