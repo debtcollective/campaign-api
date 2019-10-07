@@ -33,22 +33,30 @@ describe("model structure", () => {
 			.insert(createActions());
 
 		expect(campaign.id).toBeTruthy();
-		expect(actions[0].id).toBeTruthy();
+		expect(actions).toHaveLength(2);
 	});
 
 	it("allows to insert campaigns related to a user", async () => {
 		const user = await User.query().insert(createUser());
 		const campaign = await user
-			.$relatedQuery("campaign")
+			.$relatedQuery("campaigns")
 			.insert(createCampaign());
 
+		const createdUser = await User.query()
+			.findById(user.id)
+			.joinEager("campaigns");
+		const createdCampaign = await Campaign.query().findById(campaign.id);
+
+		expect(createdUser.id).toBeTruthy();
+		expect(createdCampaign.id).toBeTruthy();
 		expect(campaign.id).toBeTruthy();
+		expect(createdUser.campaigns).toEqual([createdCampaign]);
 	});
 
 	xit("allows to query actions by user", async () => {
 		const user = await User.query().insert(createUser());
 		const campaign = await user
-			.$relatedQuery("campaign")
+			.$relatedQuery("campaigns")
 			.insert(createCampaign());
 		const actions = await campaign
 			.$relatedQuery("actions")

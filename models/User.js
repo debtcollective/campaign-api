@@ -19,11 +19,15 @@ class User extends Model {
 
 	static get relationMappings() {
 		return {
-			campaign: {
-				relation: Model.BelongsToOneRelation,
+			campaigns: {
+				relation: Model.ManyToManyRelation,
 				modelClass: __dirname + "/Campaign",
 				join: {
-					from: "users.campaignId",
+					from: "users.id",
+					through: {
+						from: "users_campaigns.userId",
+						to: "users_campaigns.campaignId"
+					},
 					to: "campaigns.id"
 				}
 			}
