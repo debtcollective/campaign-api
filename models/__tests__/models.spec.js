@@ -53,7 +53,7 @@ describe("model structure", () => {
 		expect(createdUser.campaigns).toEqual([createdCampaign]);
 	});
 
-	xit("allows to query actions by user", async () => {
+	it("allows to query actions by user", async () => {
 		const user = await User.query().insert(createUser());
 		const campaign = await user
 			.$relatedQuery("campaigns")
@@ -61,10 +61,19 @@ describe("model structure", () => {
 		const actions = await campaign
 			.$relatedQuery("actions")
 			.insert(createActions());
-		// TODO: query the user by id and try to get his actions
+
+		const createdUser = await User.query()
+			.findById(user.id)
+			.joinEager("campaigns.actions");
 
 		expect(user.id).toBeTruthy();
 		expect(campaign.id).toBeTruthy();
 		expect(actions.length).toBeGreaterThan(0);
+		expect(createdUser.campaigns[0].actions).toEqual(
+			expect.arrayContaining([campaign.actions[0]])
+		);
+		expect(createdUser.campaigns[0].actions).toEqual(
+			expect.arrayContaining([campaign.actions[1]])
+		);
 	});
 });
