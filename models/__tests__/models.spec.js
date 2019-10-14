@@ -76,4 +76,34 @@ describe("model structure", () => {
 			expect.arrayContaining([campaign.actions[1]])
 		);
 	});
+
+	fit("allows to query user actions by a given campaign", async () => {
+		// Create a campaign with actions
+		const campaign = await Campaign.query().insert(createCampaign());
+		await campaign.$relatedQuery("actions").insert(createActions());
+
+		// Create a campaign with actions that will be fetched
+		const targetedCampaign = await Campaign.query().insert(createCampaign());
+		const targetedActions = await targetedCampaign
+			.$relatedQuery("actions")
+			.insert(createActions());
+
+		// Create a user to attach the campaign
+		const user = await User.query().insert({
+			...createUser(),
+			campaigns: [campaign, targetedCampaign]
+		});
+
+		const targetedUserActions = await User.query()
+			.findById(user.id)
+			.joinEager("actions")
+			.where("campaignId", targetedCampaign.id);
+
+		// console.log("user", user);
+		// console.log("campaign", campaign);
+		// console.log("targetedCampaign", targetedCampaign);
+		// console.log("targetedActions", targetedActions);
+
+		expect(targetedUserActions).toEqual(targetedActions);
+	});
 });

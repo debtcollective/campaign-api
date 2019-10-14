@@ -27,6 +27,19 @@ class Action extends Model {
 					from: "actions.campaignId",
 					to: "campaigns.id"
 				}
+			},
+			user: {
+				relation: Model.BelongsToOneRelation,
+				modelClass: __dirname + "/User",
+				join: {
+					from: "actions.id",
+					through: {
+						from: "users_actions.actionId",
+						to: "users_actions.userId",
+						extra: ["completed"]
+					},
+					to: "users.id"
+				}
 			}
 		};
 	}
