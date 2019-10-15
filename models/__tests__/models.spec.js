@@ -73,6 +73,30 @@ describe("model structure", () => {
 		);
 	});
 
+	it("allows to query user campaign actions", async () => {
+		const user = await User.query().insert(createUser());
+		const campaignOne = await user
+			.$relatedQuery("campaigns")
+			.insert(createCampaign());
+		await campaignOne.$relatedQuery("actions").insert(createActions());
+		const campaignTwo = await user
+			.$relatedQuery("campaigns")
+			.insert(createCampaign());
+		await campaignTwo.$relatedQuery("actions").insert(createActions());
+
+		// Pretend we need to find the actions for campaignOne within just created user
+		const createdUser = await User.query()
+			.findById(user.id)
+			.joinEager("campaigns.actions")
+			.where("campaigns.id", campaignOne.id);
+		const userCampaign = createdUser.campaigns[0];
+
+		expect(createdUser.campaigns).toHaveLength(1);
+		expect(userCampaign.actions).toEqual(
+			expect.arrayContaining([campaignOne.actions[0], campaignOne.actions[1]])
+		);
+	});
+
 	it("allows create 'UserAction' with given campaign, action and user id's", async () => {
 		const targetedCampaign = await Campaign.query().insert(createCampaign());
 		const targetedActions = await targetedCampaign
@@ -88,5 +112,15 @@ describe("model structure", () => {
 		});
 
 		expect(userAction.id).toBeTruthy();
+	});
+
+	it("throws an error if trying to create a 'UserAction' with id's that doesn't map to valid entry", async () => {
+		await expect(
+			UserAction.query().insert({
+				actionId: 400,
+				campaignId: 400,
+				userId: 400
+			})
+		).rejects.toBeTruthy();
 	});
 });
