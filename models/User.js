@@ -31,17 +31,12 @@ class User extends Model {
 					to: "campaigns.id"
 				}
 			},
-			actions: {
+			userActions: {
 				relation: Model.HasManyRelation,
-				modelClass: __dirname + "/Action",
+				modelClass: __dirname + "/UserAction",
 				join: {
 					from: "users.id",
-					through: {
-						from: "users_actions.userId",
-						to: "users_actions.actionId",
-						extra: ["completed"]
-					},
-					to: "actions.id"
+					to: "userActions.userId"
 				}
 			}
 		};

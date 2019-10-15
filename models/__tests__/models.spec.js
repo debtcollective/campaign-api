@@ -5,6 +5,7 @@ const { Model } = require("objection");
 const { Action } = require("../../models/Action");
 const { Campaign } = require("../../models/Campaign");
 const { User } = require("../../models/User");
+const { UserAction } = require("../../models/UserAction");
 const { createActions, createCampaign, createUser } = require("../stubs");
 
 /**
@@ -26,7 +27,7 @@ beforeAll(async () => {
 });
 
 describe("model structure", () => {
-	it("allows to insert actions related to a campaign", async () => {
+	it("allows to insert actions into campaigns", async () => {
 		const campaign = await Campaign.query().insert(createCampaign());
 		const actions = await campaign
 			.$relatedQuery("actions")
@@ -36,7 +37,7 @@ describe("model structure", () => {
 		expect(actions).toHaveLength(2);
 	});
 
-	it("allows to insert campaigns related to a user", async () => {
+	it("allows to insert campaigns into a users", async () => {
 		const user = await User.query().insert(createUser());
 		const campaign = await user
 			.$relatedQuery("campaigns")
@@ -54,56 +55,38 @@ describe("model structure", () => {
 	});
 
 	it("allows to query actions by user", async () => {
+		// Prepare data
 		const user = await User.query().insert(createUser());
 		const campaign = await user
 			.$relatedQuery("campaigns")
 			.insert(createCampaign());
-		const actions = await campaign
-			.$relatedQuery("actions")
-			.insert(createActions());
+		await campaign.$relatedQuery("actions").insert(createActions());
 
+		// Pretend we need to find the just created user
 		const createdUser = await User.query()
 			.findById(user.id)
 			.joinEager("campaigns.actions");
+		const userCampaign = createdUser.campaigns[0];
 
-		expect(user.id).toBeTruthy();
-		expect(campaign.id).toBeTruthy();
-		expect(actions.length).toBeGreaterThan(0);
-		expect(createdUser.campaigns[0].actions).toEqual(
-			expect.arrayContaining([campaign.actions[0]])
-		);
-		expect(createdUser.campaigns[0].actions).toEqual(
-			expect.arrayContaining([campaign.actions[1]])
+		expect(userCampaign.actions).toEqual(
+			expect.arrayContaining([campaign.actions[0], campaign.actions[1]])
 		);
 	});
 
-	fit("allows to query user actions by a given campaign", async () => {
-		// Create a campaign with actions
-		const campaign = await Campaign.query().insert(createCampaign());
-		await campaign.$relatedQuery("actions").insert(createActions());
-
-		// Create a campaign with actions that will be fetched
+	it("allows create 'UserAction' with given campaign, action and user id's", async () => {
 		const targetedCampaign = await Campaign.query().insert(createCampaign());
 		const targetedActions = await targetedCampaign
 			.$relatedQuery("actions")
 			.insert(createActions());
+		const targetedUser = await User.query().insert(createUser());
 
-		// Create a user to attach the campaign
-		const user = await User.query().insert({
-			...createUser(),
-			campaigns: [campaign, targetedCampaign]
+		// Creates a UserAction from targeted data
+		const userAction = await UserAction.query().insert({
+			actionId: targetedActions[0].id,
+			campaignId: targetedCampaign.id,
+			userId: targetedUser.id
 		});
 
-		const targetedUserActions = await User.query()
-			.findById(user.id)
-			.joinEager("actions")
-			.where("campaignId", targetedCampaign.id);
-
-		// console.log("user", user);
-		// console.log("campaign", campaign);
-		// console.log("targetedCampaign", targetedCampaign);
-		// console.log("targetedActions", targetedActions);
-
-		expect(targetedUserActions).toEqual(targetedActions);
+		expect(userAction.id).toBeTruthy();
 	});
 });
