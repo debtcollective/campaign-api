@@ -11,8 +11,10 @@ const queryResolvers = {
 			.findById(userId)
 			.joinEager("campaigns.actions")
 			.where("campaigns.id", campaignId);
+		// TODO: we need to avoid to retrieve an array since we look for id
+		const campaignActions = result.campaigns[0].actions;
 
-		return result;
+		return campaignActions;
 	}
 };
 

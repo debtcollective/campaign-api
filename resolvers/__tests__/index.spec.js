@@ -46,6 +46,7 @@ beforeAll(async () => {
 	await Action.query().insert(createActions()[0]);
 
 	stubs.campaigns = [campaignOne, campaignTwo];
+	stubs.user = user;
 });
 
 describe("Query resolvers", () => {
@@ -53,5 +54,15 @@ describe("Query resolvers", () => {
 		const campaigns = await queryResolvers.campaigns();
 
 		expect(campaigns).toEqual(expect.arrayContaining(stubs.campaigns));
+	});
+
+	it("returns actions for certain user campaign with #userCampaignsActions method", async () => {
+		const targetedCampaign = stubs.campaigns[0];
+		const actions = await queryResolvers.userCampaignsActions(null, {
+			campaignId: targetedCampaign.id,
+			userId: stubs.user.id
+		});
+
+		expect(actions).toEqual(targetedCampaign.actions);
 	});
 });
