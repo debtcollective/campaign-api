@@ -5,6 +5,7 @@ const { Model } = require("objection");
 const { Action } = require("../../models/Action");
 const { Campaign } = require("../../models/Campaign");
 const { User } = require("../../models/User");
+const { UserAction } = require("../../models/UserAction");
 const {
 	createActions,
 	createCampaign,
@@ -45,8 +46,17 @@ beforeAll(async () => {
 	// Create a widow actions
 	await Action.query().insert(createActions()[0]);
 
+	// Create an entry of UserAction
+	const userAction = await UserAction.query().insert({
+		actionId: campaignOne.actions[0].id,
+		campaignId: campaignOne.id,
+		userId: user.id,
+		completed: true
+	});
+
 	stubs.campaigns = [campaignOne, campaignTwo];
 	stubs.user = user;
+	stubs.userAction = userAction;
 });
 
 describe("Query resolvers", () => {
@@ -64,5 +74,13 @@ describe("Query resolvers", () => {
 		});
 
 		expect(actions).toEqual(targetedCampaign.actions);
+	});
+
+	it("returns the 'UserActions' for a given user", async () => {
+		const userActions = await queryResolvers.userActions(null, {
+			userId: stubs.user.id
+		});
+
+		expect(userActions).toEqual(expect.arrayContaining([stubs.userAction]));
 	});
 });

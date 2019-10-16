@@ -15,6 +15,12 @@ const queryResolvers = {
 		const campaignActions = result.campaigns[0].actions;
 
 		return campaignActions;
+	},
+	userActions: async (root, { userId }) => {
+		const result = await User.query()
+			.findById(userId)
+			.joinEager("userActions");
+		return result.userActions;
 	}
 };
 
