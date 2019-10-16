@@ -16,7 +16,17 @@ const queryResolvers = {
 
 		return campaignActions;
 	},
-	userActions: async (root, { userId }) => {
+	userActions: async (root, { userId, campaignId }) => {
+		// TODO: avoid the short-circuit and add conditionally "where" filter
+		if (campaignId) {
+			const result = await User.query()
+				.findById(userId)
+				.joinEager("userActions")
+				.where("campaignId", campaignId);
+
+			return result.userActions;
+		}
+
 		const result = await User.query()
 			.findById(userId)
 			.joinEager("userActions");

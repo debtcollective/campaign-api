@@ -43,20 +43,33 @@ beforeAll(async () => {
 	const campaignTwo = await Campaign.query().insert(createCampaign());
 	await campaignTwo.$relatedQuery("actions").insert(createActions());
 
+	// Attach an extra campaign to the user
+	const campaignThree = await user
+		.$relatedQuery("campaigns")
+		.insert(createCampaign());
+	await campaignThree.$relatedQuery("actions").insert(createActions());
+
 	// Create a widow actions
 	await Action.query().insert(createActions()[0]);
 
 	// Create an entry of UserAction
-	const userAction = await UserAction.query().insert({
+	const userActionOne = await UserAction.query().insert({
 		actionId: campaignOne.actions[0].id,
 		campaignId: campaignOne.id,
 		userId: user.id,
 		completed: true
 	});
 
-	stubs.campaigns = [campaignOne, campaignTwo];
+	const userActionTwo = await UserAction.query().insert({
+		actionId: campaignThree.actions[0].id,
+		campaignId: campaignThree.id,
+		userId: user.id,
+		completed: true
+	});
+
+	stubs.campaigns = [campaignOne, campaignTwo, campaignThree];
 	stubs.user = user;
-	stubs.userAction = userAction;
+	stubs.userActions = [userActionOne, userActionTwo];
 });
 
 describe("Query resolvers", () => {
@@ -81,6 +94,16 @@ describe("Query resolvers", () => {
 			userId: stubs.user.id
 		});
 
-		expect(userActions).toEqual(expect.arrayContaining([stubs.userAction]));
+		expect(userActions).toEqual(expect.arrayContaining(stubs.userActions));
+	});
+
+	it("returns the 'UserActions' for a given user filtered by campaignId", async () => {
+		const userActions = await queryResolvers.userActions(null, {
+			userId: stubs.user.id,
+			campaignId: stubs.campaigns[2].id
+		});
+
+		expect(userActions).toHaveLength(1);
+		expect(userActions).toEqual(expect.arrayContaining([stubs.userActions[1]]));
 	});
 });
