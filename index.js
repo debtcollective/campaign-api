@@ -4,7 +4,7 @@
 const Knex = require("knex");
 const knexConfig = require("./knexfile");
 const { Model } = require("objection");
-const { Campaign } = require("./models/Campaign");
+const { queryResolvers } = require("./resolvers");
 
 // Initialize knex.
 const knex = Knex(knexConfig.development);
@@ -45,10 +45,7 @@ const typeDefs = gql`
 
 const resolvers = {
 	Query: {
-		campaigns: async () => {
-			const campaigns = await Campaign.query().eager("actions");
-			return campaigns;
-		}
+		...queryResolvers
 	}
 };
 
