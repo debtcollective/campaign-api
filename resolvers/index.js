@@ -1,5 +1,6 @@
 const { Campaign } = require("../models/Campaign");
 const { User } = require("../models/User");
+const { UserAction } = require("../models/UserAction");
 
 const queryResolvers = {
 	campaigns: async () => {
@@ -34,6 +35,17 @@ const queryResolvers = {
 	}
 };
 
+const mutationResolvers = {
+	userActionUpdate: async (root, { id, completed }) => {
+		const userAction = await UserAction.query().patchAndFetchById(id, {
+			completed
+		});
+
+		return userAction;
+	}
+};
+
 module.exports = {
-	queryResolvers
+	queryResolvers,
+	mutationResolvers
 };

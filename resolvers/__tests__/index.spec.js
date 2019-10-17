@@ -11,7 +11,7 @@ const {
 	createCampaign,
 	createUser
 } = require("../../models/stubs");
-const { queryResolvers } = require("../");
+const { queryResolvers, mutationResolvers } = require("../");
 
 /**
  * In order to being able to run this you have to
@@ -31,6 +31,7 @@ beforeAll(async () => {
 	await User.query().delete();
 	await Action.query().delete();
 	await Campaign.query().delete();
+	await UserAction.query().delete();
 
 	// Create a user with campaign and actions
 	const user = await User.query().insert(createUser());
@@ -105,5 +106,30 @@ describe("Query resolvers", () => {
 
 		expect(userActions).toHaveLength(1);
 		expect(userActions).toEqual(expect.arrayContaining([stubs.userActions[1]]));
+	});
+});
+
+describe("Mutation resolvers", () => {
+	it("allows to update the completed value with #userActionUpdate", async () => {
+		const actionId = stubs.campaigns[0].actions[1].id;
+		const campaignId = stubs.campaigns[0].id;
+		const userId = stubs.user.id;
+
+		const userAction = await UserAction.query().insert({
+			actionId,
+			campaignId,
+			userId,
+			completed: false
+		});
+
+		const response = await mutationResolvers.userActionUpdate(null, {
+			id: userAction.id,
+			completed: true
+		});
+
+		const updatedUserAction = await UserAction.query().findById(userAction.id);
+
+		expect(updatedUserAction.completed).toEqual(true);
+		expect(response).toEqual(updatedUserAction);
 	});
 });

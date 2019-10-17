@@ -4,7 +4,7 @@
 const Knex = require("knex");
 const knexConfig = require("./knexfile");
 const { Model } = require("objection");
-const { queryResolvers } = require("./resolvers");
+const { queryResolvers, mutationResolvers } = require("./resolvers");
 
 // Initialize knex.
 const knex = Knex(knexConfig.development);
@@ -45,7 +45,8 @@ const typeDefs = gql`
 
 const resolvers = {
 	Query: {
-		...queryResolvers
+		...queryResolvers,
+		...mutationResolvers
 	}
 };
 
