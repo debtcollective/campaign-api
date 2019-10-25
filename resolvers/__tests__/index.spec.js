@@ -87,7 +87,7 @@ describe("Query resolvers", () => {
 			userId: stubs.user.id
 		});
 
-		expect(actions).toEqual(targetedCampaign.actions);
+		expect(actions).toEqual(expect.arrayContaining(targetedCampaign.actions));
 	});
 
 	it("returns the 'UserActions' for a given user", async () => {
