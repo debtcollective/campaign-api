@@ -3,11 +3,19 @@ const { User } = require("../models/User");
 const { UserAction } = require("../models/UserAction");
 
 const queryResolvers = {
+	/**
+	 * Retrieve all the campaigns alongside its actions
+	 */
 	campaigns: async () => {
 		const campaigns = await Campaign.query().eager("actions");
 		return campaigns;
 	},
-	userCampaignsActions: async (root, { campaignId, userId }) => {
+	/**
+	 * Retrive the actions for a given user and campaign
+	 */
+	userCampaignsActions: async (root, args) => {
+		const { campaignId, userId } = args;
+
 		const result = await User.query()
 			.findById(userId)
 			.joinEager("campaigns.actions")
@@ -17,6 +25,9 @@ const queryResolvers = {
 
 		return campaignActions;
 	},
+	/**
+	 * Retrieve the records of UserActions for a given user and campaign
+	 */
 	userActions: async (root, { userId, campaignId }) => {
 		// TODO: avoid the short-circuit and add conditionally "where" filter
 		if (campaignId) {
@@ -36,10 +47,16 @@ const queryResolvers = {
 };
 
 const mutationResolvers = {
-	userActionUpdate: async (root, { id, completed }) => {
-		const userAction = await UserAction.query().patchAndFetchById(id, {
-			completed
-		});
+	/**
+	 * Updates a record of UserAction to completed or not
+	 */
+	userActionUpdate: async (root, { userActionId, completed }) => {
+		const userAction = await UserAction.query().patchAndFetchById(
+			userActionId,
+			{
+				completed
+			}
+		);
 
 		return userAction;
 	}
