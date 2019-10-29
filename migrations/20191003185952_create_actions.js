@@ -8,9 +8,14 @@ exports.up = function(knex) {
 			.inTable("campaigns")
 			.onDelete("SET NULL")
 			.index();
+		// A short sentence saying what's the action
 		table.string("title");
+		// A more detail explanaiton about why's and how to do the action
 		table.string("description");
-		table.enu("verification", ["NONE"]);
+		// A way to categorize the action with UI proposes
+		table.string("type");
+		// A set of arguments needed to built the UI approperly
+		table.jsonb("config");
 	});
 };
 

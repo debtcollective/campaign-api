@@ -13,7 +13,8 @@ class Action extends Model {
 			properties: {
 				id: { type: "integer" },
 				title: { type: "string", minLength: 1, maxLength: 255 },
-				description: { type: "string", minLength: 1, maxLength: 255 }
+				description: { type: "string", minLength: 1, maxLength: 255 },
+				type: { type: "string", minLength: 1, maxLength: 255 }
 			}
 		};
 	}
