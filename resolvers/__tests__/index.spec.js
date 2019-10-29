@@ -123,7 +123,7 @@ describe("Mutation resolvers", () => {
 		});
 
 		const response = await mutationResolvers.userActionUpdate(null, {
-			id: userAction.id,
+			userActionId: userAction.id,
 			completed: true
 		});
 
