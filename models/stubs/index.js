@@ -1,27 +1,26 @@
 const faker = require("faker");
 
 module.exports = {
-	createUser: () => ({
-		email: faker.internet.email()
+	createUser: fixedData => ({
+		email: faker.internet.email(),
+		...fixedData
 	}),
-	createCampaign: () => ({
+	createCampaign: fixedData => ({
 		name: faker.lorem.words(2),
 		slug: faker.lorem
 			.words(2)
 			.toLowerCase()
 			.split(" ")
-			.join("-")
+			.join("-"),
+		...fixedData
 	}),
-	createActions: () => [
-		{
+	createActions: (fixedData, amount = 2) => {
+		return Array(amount).fill({
 			title: faker.lorem.words(2),
 			description: faker.lorem.words(10),
-			verification: "NONE"
-		},
-		{
-			title: faker.lorem.words(2),
-			description: faker.lorem.words(10),
-			verification: "NONE"
-		}
-	]
+			type: "Retweet",
+			config: { tweet_id: faker.random.number() },
+			...fixedData
+		});
+	}
 };
