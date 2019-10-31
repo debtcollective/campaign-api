@@ -1,6 +1,8 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+	scalar JSONObject
+
 	type User {
 		id: ID!
 	}
@@ -13,6 +15,10 @@ const typeDefs = gql`
 		title: String!
 		"description of the action"
 		description: String!
+		"define the type of UI to render"
+		type: String!
+		"all the elements needed in order to render the whole UI composition"
+		config: JSONObject
 	}
 
 	type Campaign {

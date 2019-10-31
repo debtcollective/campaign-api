@@ -14,9 +14,16 @@ Model.knex(knex);
 /**
  * GraphQL related code
  */
+const { GraphQLJSONObject } = require("graphql-type-json");
 const { ApolloServer } = require("apollo-server");
 
 const resolvers = {
+	/**
+	 * Custom scalar in order to support "Object" without
+	 * strong type properties
+	 * WARNING: this should be used only for specific proposes
+	 */
+	JSONObject: GraphQLJSONObject,
 	Query: {
 		...queryResolvers
 	},
