@@ -106,4 +106,4 @@ const main = async () => {
 
 main();
 
-Promise.all([main]).then(process.exit);
+Promise.all([main()]).then(process.exit);
