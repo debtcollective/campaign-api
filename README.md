@@ -1,5 +1,5 @@
 <h1 align="center">Welcome to social-giveaways-service 👋</h1>
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
@@ -55,6 +55,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://github.com/duranmla"><img src="https://avatars2.githubusercontent.com/u/1425162?v=4" width="100px;" alt="Alexis Duran"/><br /><sub><b>Alexis Duran</b></sub></a><br /><a href="#infra-duranmla" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/duranmla/social-giveaways/commits?author=duranmla" title="Tests">⚠️</a> <a href="https://github.com/duranmla/social-giveaways/commits?author=duranmla" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.orlandodelaguila.com"><img src="https://avatars3.githubusercontent.com/u/849872?v=4" width="100px;" alt="Orlando Del Aguila"/><br /><sub><b>Orlando Del Aguila</b></sub></a><br /><a href="#infra-orlando" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/duranmla/social-giveaways/commits?author=orlando" title="Tests">⚠️</a> <a href="https://github.com/duranmla/social-giveaways/commits?author=orlando" title="Code">💻</a></td>
   </tr>
 </table>
 
