@@ -1,15 +1,9 @@
-<h1 align="center">Welcome to social-giveaways-service 👋</h1>
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="#" target="_blank">
-    <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
-  </a>
-  <a href="https://twitter.com/0debtzone" target="_blank">
-    <img alt="Twitter: 0debtzone" src="https://img.shields.io/twitter/follow/0debtzone.svg?style=social" />
-  </a>
-</p>
+# Welcome to social-giveaways-service 👋
 
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
+[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](#)
+[![Twitter: 0debtzone](https://img.shields.io/twitter/follow/0debtzone.svg?style=social)](https://twitter.com/0debtzone)
 > This service intends to be able to make relations between users and campaigns of your organizations, those campaigns have actions that help to promote the awareness of your initiatives
 
 ## Pre-requisites
@@ -40,12 +34,6 @@ The tests drop the current database for testing *(so you need to have even a emp
 yarn test
 ```
 
-## Author
-
-👤 **debtcollective**
-
-* Twitter: [@0debtzone](https://twitter.com/0debtzone)
-* Github: [@debtcollective](https://github.com/debtcollective)
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
