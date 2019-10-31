@@ -35,7 +35,7 @@ const main = async () => {
 		.insert(createCampaign());
 	await campaignOne.$relatedQuery("actions").insert(
 		createActions({
-			type: "link",
+			type: "LINK",
 			config: {
 				href: faker.internet.url(),
 				text: faker.random.words(2),
@@ -49,7 +49,7 @@ const main = async () => {
 	const campaignTwo = await Campaign.query().insert(createCampaign());
 	await campaignTwo.$relatedQuery("actions").insert(
 		createActions({
-			type: "link",
+			type: "LINK",
 			config: {
 				href: faker.internet.url(),
 				text: faker.random.words(2),
@@ -65,7 +65,7 @@ const main = async () => {
 		.insert(createCampaign());
 	await campaignThree.$relatedQuery("actions").insert(
 		createActions({
-			type: "link",
+			type: "LINK",
 			config: {
 				href: faker.internet.url(),
 				text: faker.random.words(2),
@@ -78,7 +78,7 @@ const main = async () => {
 	// Create a widow actions
 	await Action.query().insert(
 		createActions({
-			type: "link",
+			type: "LINK",
 			config: {
 				href: faker.internet.url(),
 				text: faker.random.words(2),
