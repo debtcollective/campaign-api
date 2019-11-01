@@ -33,17 +33,44 @@ const main = async () => {
 	const campaignOne = await user
 		.$relatedQuery("campaigns")
 		.insert(createCampaign());
-	await campaignOne.$relatedQuery("actions").insert(
-		createActions({
-			type: "LINK",
-			config: {
-				href: faker.internet.url(),
-				text: faker.random.words(2),
-				target: "_blank",
-				delay: 200
-			}
-		})
-	);
+	await campaignOne.$relatedQuery("actions").insert([
+		...createActions(
+			{
+				type: "LINK",
+				config: {
+					href: faker.internet.url(),
+					text: faker.random.words(2),
+					target: "_blank",
+					delay: 200
+				}
+			},
+			1
+		),
+		...createActions(
+			{
+				type: "LINK",
+				config: {
+					href: faker.internet.url(),
+					text: faker.random.words(2),
+					target: "_blank",
+					delay: 200
+				}
+			},
+			1
+		),
+		...createActions(
+			{
+				type: "LINK",
+				config: {
+					href: faker.internet.url(),
+					text: faker.random.words(2),
+					target: "_blank",
+					delay: 200
+				}
+			},
+			1
+		)
+	]);
 
 	// Create a widow campaign
 	const campaignTwo = await Campaign.query().insert(createCampaign());
@@ -93,7 +120,21 @@ const main = async () => {
 		actionId: campaignOne.actions[0].id,
 		campaignId: campaignOne.id,
 		userId: user.id,
-		completed: true
+		completed: false
+	});
+
+	await UserAction.query().insert({
+		actionId: campaignOne.actions[1].id,
+		campaignId: campaignOne.id,
+		userId: user.id,
+		completed: false
+	});
+
+	await UserAction.query().insert({
+		actionId: campaignOne.actions[2].id,
+		campaignId: campaignOne.id,
+		userId: user.id,
+		completed: false
 	});
 
 	await UserAction.query().insert({
