@@ -50,7 +50,7 @@ const typeDefs = gql`
 	}
 
 	type Mutation {
-		userActionUpdate(userActionId: ID!, completed: Boolean): Action!
+		userActionUpdate(userActionId: ID!, completed: Boolean): UserAction!
 	}
 `;
 
