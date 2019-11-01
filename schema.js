@@ -38,7 +38,9 @@ const typeDefs = gql`
 		"campaign identifier for this record"
 		campaignId: ID!
 		"wether or not the user has completed the action"
-		completed: Boolean
+		completed: Boolean!
+		"common data related to the action"
+		action: Action
 	}
 
 	type Query {

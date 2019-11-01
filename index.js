@@ -5,6 +5,7 @@ const Knex = require("knex");
 const knexConfig = require("./knexfile");
 const { Model } = require("objection");
 const { queryResolvers, mutationResolvers } = require("./resolvers");
+const { Action } = require("./models/Action");
 const typeDefs = require("./schema");
 
 // Initialize knex.
@@ -29,6 +30,14 @@ const resolvers = {
 	},
 	Mutation: {
 		...mutationResolvers
+	},
+	// Allow to append action data into the UserAction request
+	UserAction: {
+		action: async userAction => {
+			const { actionId } = userAction;
+			const result = await Action.query().findById(actionId);
+			return result;
+		}
 	}
 };
 
