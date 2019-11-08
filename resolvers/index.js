@@ -4,6 +4,18 @@ const { UserAction } = require("../models/UserAction");
 
 const queryResolvers = {
 	/**
+	 * Retrive user using Cookies
+	 */
+	currentUser: async (root, args, context) => {
+		console.log("currentUser", {
+			root,
+			args,
+			context
+		});
+
+		return { id: 1 };
+	},
+	/**
 	 * Retrieve all the campaigns alongside its actions
 	 */
 	campaigns: async () => {

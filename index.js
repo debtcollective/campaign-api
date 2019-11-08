@@ -15,8 +15,11 @@ Model.knex(knex);
 /**
  * GraphQL related code
  */
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const { ApolloServer } = require("apollo-server-express");
 const { GraphQLJSONObject } = require("graphql-type-json");
-const { ApolloServer } = require("apollo-server");
 
 const resolvers = {
 	/**
@@ -41,9 +44,24 @@ const resolvers = {
 	}
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
-
-server.listen().then(({ url }) => {
-	// eslint-disable-next-line
-	console.log(`🚀 Server ready at ${url}`);
+const server = new ApolloServer({
+	cors: true,
+	typeDefs,
+	resolvers,
+	context: ({ req }) => {
+		console.log(">", req);
+	}
 });
+
+const app = express();
+const path = "/";
+const corsOptions = {
+	origin: "http://campaign.lvh.me:8000",
+	credentials: true
+};
+
+server.applyMiddleware({ app, path, cors: corsOptions });
+
+app.listen({ port: 4000 }, () =>
+	console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+);
