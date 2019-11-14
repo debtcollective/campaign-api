@@ -58,11 +58,11 @@ docker-compose run --rm app yarn db:migrate
 
 ## Run tests
 
-The tests drop the current database for testing _(so you need to have even a empty database of testing created)_ and create a new one to be populated with the fake data to make the assertions.
+In order to being able to run this you have to:
 
-```sh
-yarn test
-```
+1. Create a database called "campaign_api_test". You can do this by running `NODE_ENV=test yarn db:create`
+2. Migrate the database running `NODE_ENV=test yarn db:migrate`
+3. Run the tests with `yarn test` or with coverage running `yarn test:ci`
 
 ## Contributors ✨
 

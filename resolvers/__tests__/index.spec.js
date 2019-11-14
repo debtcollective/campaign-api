@@ -13,12 +13,6 @@ const {
 } = require("../../models/stubs");
 const { queryResolvers, mutationResolvers } = require("../");
 
-/**
- * In order to being able to run this you have to
- *  1. create a psql database called "campaign_api_test". You can do this by running `NODE_ENV=test yarn db:create`
- *  2. migrate the database running `NODE_ENV=test yarn db:migrate`
- */
-
 const knex = Knex(knexConfig);
 Model.knex(knex);
 

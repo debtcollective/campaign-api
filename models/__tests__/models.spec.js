@@ -8,16 +8,7 @@ const { User } = require("../../models/User");
 const { UserAction } = require("../../models/UserAction");
 const { createActions, createCampaign, createUser } = require("../stubs");
 
-/**
- * In order to being able to run this you have to
- *  1. create a psql database called as `knexfile.testing` suggests
- *  2. npx knex migrate:latest --env="testing"
- *
- * NOTE: by running `yarn test` it should do the trick but you need for the very first
- * time to create the database yourself
- */
-
-const knex = Knex(knexConfig.testing);
+const knex = Knex(knexConfig);
 Model.knex(knex);
 
 beforeAll(async () => {
