@@ -8,7 +8,7 @@ RUN yarn install
 COPY . .
 
 # Copy knexfile.js
-COPY knexfile.sample.js knexfile.js
+COPY knexfile.template.js knexfile.js
 
 EXPOSE 4000
 

@@ -48,6 +48,10 @@ jobs:
           command: cp .env.template .env
 
       - run:
+          name: knexfile
+          command: cp knexfile.template.js knexfile.js
+
+      - run:
           name: setup db
           command: yarn db:migrate
 

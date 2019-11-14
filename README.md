@@ -20,7 +20,7 @@ These are the apps you will need to have installed in order to run this app.
 Run the command below to init the database configuration.
 
 ```sh
-cp knexfile.sample.js knexfile.js
+cp knexfile.template.js knexfile.js
 ```
 
 You will need to modify variables to fit your environment, more importantly the `user` and `superuser` fields
