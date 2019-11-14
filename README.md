@@ -41,6 +41,21 @@ Runs the service that expose a GraphQL endpoint.
 yarn start
 ```
 
+### Running with Docker
+
+You can use `docker-compose` to run the project with Docker if you prefer that, or to test that the image is building correctly.
+
+```sh
+docker-compose up
+```
+
+To create database and run migrations run in another terminal
+
+```sh
+docker-compose run --rm app yarn db:create
+docker-compose run --rm app yarn db:migrate
+```
+
 ## Run tests
 
 The tests drop the current database for testing _(so you need to have even a empty database of testing created)_ and create a new one to be populated with the fake data to make the assertions.

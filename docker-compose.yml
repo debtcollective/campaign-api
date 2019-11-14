@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+      - "9229:9229"
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASS: letmein
+      DB_NAME: campaign_api_development
+
+  postgres:
+    image: postgres:10
+    environment:
+      POSTGRES_PASSWORD: letmein
+      POSTGRES_USER: postgres
