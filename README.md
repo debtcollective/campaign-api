@@ -1,18 +1,33 @@
-# Welcome to social-giveaways-service 👋
+# Campaign API 👋
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
 [![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](#)
 [![Twitter: 0debtzone](https://img.shields.io/twitter/follow/0debtzone.svg?style=social)](https://twitter.com/0debtzone)
-> This service intends to be able to make relations between users and campaigns of your organizations, those campaigns have actions that help to promote the awareness of your initiatives
 
-## Pre-requisites
+> This service makes relations between users and campaigns of your organizations, those campaigns have actions that help to promote the awareness of your initiatives.
 
-You need to have postgresql in your machine, this project expect you to have two databases one for development and another to test environment check [knexfile.js](knexfile.js) to check the databases name.
+## Dependencies
 
-If you don't have postgresql installed or/and you don't know how to create a database you can refer to [this blog post](https://www.codementor.io/engineerapart/getting-started-with-postgresql-on-mac-osx-are8jcopb) that can help you to setup everything up.
+These are the apps you will need to have installed in order to run this app.
+
+- [PostgreSQL](https://www.postgresql.org/).
 
 ## Install
+
+### Knexfile
+
+Run the command below to init the database configuration.
+
+```sh
+cp knexfile.template.js knexfile.js
+```
+
+You will need to modify variables to fit your environment, more importantly the `user` and `superuser` fields
+
+### Packages
+
+Run the command below to install the packages for this app.
 
 ```sh
 yarn install
@@ -26,13 +41,28 @@ Runs the service that expose a GraphQL endpoint.
 yarn start
 ```
 
-## Run tests
+### Running with Docker
 
-The tests drop the current database for testing *(so you need to have even a empty database of testing created)* and create a new one to be populated with the fake data to make the assertions.
+You can use `docker-compose` to run the project with Docker if you prefer that, or to test that the image is building correctly.
 
 ```sh
-yarn test
+docker-compose up
 ```
+
+To create database and run migrations run in another terminal
+
+```sh
+docker-compose run --rm app yarn db:create
+docker-compose run --rm app yarn db:migrate
+```
+
+## Run tests
+
+In order to being able to run this you have to:
+
+1. Create a database called "campaign_api_test". You can do this by running `NODE_ENV=test yarn db:create`
+2. Migrate the database running `NODE_ENV=test yarn db:migrate`
+3. Run the tests with `yarn test` or with coverage running `yarn test:ci`
 
 ## Contributors ✨
 
