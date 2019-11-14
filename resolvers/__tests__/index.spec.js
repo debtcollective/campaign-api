@@ -15,14 +15,11 @@ const { queryResolvers, mutationResolvers } = require("../");
 
 /**
  * In order to being able to run this you have to
- *  1. create a psql database called as `knexfile.testing` suggests
- *  2. npx knex migrate:latest --env="testing"
- *
- * NOTE: by running `yarn test` it should do the trick but you need for the very first
- * time to create the database yourself
+ *  1. create a psql database called "campaign_api_test". You can do this by running `NODE_ENV=test yarn db:create`
+ *  2. migrate the database running `NODE_ENV=test yarn db:migrate`
  */
 
-const knex = Knex(knexConfig.testing);
+const knex = Knex(knexConfig);
 Model.knex(knex);
 
 const stubs = {};
