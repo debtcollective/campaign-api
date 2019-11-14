@@ -2,10 +2,10 @@
  * This script is intended to be used in order to populated easily the development
  * database with data that you may want for E2E testing with client app
  *
- * `dropdb social-giveaways-service-development`
- * `createdb social-giveaways-service-development -U <user>`
+ * `dropdb campaign-api-development`
+ * `createdb campaign-api-development -U <user>`
  * `npx knex migrate:latest`
- * `node ./models/development.seed.js`
+ * `node ./models/stubs/development.seed.js`
  */
 
 const faker = require("faker");
@@ -19,7 +19,7 @@ const { User } = require("../../models/User");
 const { UserAction } = require("../../models/UserAction");
 const { createActions, createCampaign, createUser } = require("../stubs");
 
-const knex = Knex(knexConfig.development);
+const knex = Knex(knexConfig);
 Model.knex(knex);
 
 const main = async () => {

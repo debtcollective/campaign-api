@@ -2,14 +2,14 @@
  * Objection related code
  */
 const Knex = require("knex");
-const knexConfig = require("./knexfile");
+const knexConfig = require("./knexfile.js");
 const { Model } = require("objection");
 const { queryResolvers, mutationResolvers } = require("./resolvers");
 const { Action } = require("./models/Action");
 const typeDefs = require("./schema");
 
 // Initialize knex.
-const knex = Knex(knexConfig.development);
+const knex = Knex(knexConfig);
 Model.knex(knex);
 
 /**
@@ -21,10 +21,10 @@ const { GraphQLJSONObject } = require("graphql-type-json");
 
 const resolvers = {
 	/**
-	 * Custom scalar in order to support "Object" without
-	 * strong type properties
-	 * WARNING: this should be used only for specific proposes
-	 */
+   * Custom scalar in order to support "Object" without
+   * strong type properties
+   * WARNING: this should be used only for specific proposes
+   */
 	JSONObject: GraphQLJSONObject,
 	Query: {
 		...queryResolvers
@@ -52,12 +52,21 @@ const server = new ApolloServer({
 	typeDefs,
 	resolvers,
 	context: ({ req }) => {
+		if (!req.headers.cookie) {
+			return {};
+		}
+
 		const cookies = cookie.parse(req.headers.cookie);
-		console.log("auth_token", cookies.tdc_auth_token);
+
+		// const jwt = cookies[JWT_COOKIE_NAME];
+		// const payload, headers = JWT.decode(jwt)
+		// const user = User.findOrCreate(jwtPayload)
+
+		return {};
 	}
 });
 
 server.listen().then(({ url }) => {
 	// eslint-disable-next-line
-	console.log(`🚀 Server ready at ${url}`);
+  console.log(`🚀 Server ready at ${url}`);
 });
