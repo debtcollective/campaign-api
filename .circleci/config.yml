@@ -184,7 +184,7 @@ jobs:
     executor: docker-publisher
     environment:
       ECS_CLUSTER: stage
-      ECS_SERVICE: campaign-api
+      ECS_SERVICE: campaign_api
     steps:
       - checkout
       - aws-cli/install
