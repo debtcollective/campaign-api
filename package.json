@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github"
+    ]
+  },
   "scripts": {
     "db:create": "node scripts/db/createdb.js",
     "db:drop": "node scripts/db/dropdb.js",
@@ -26,10 +33,14 @@
     "pg": "^7.12.1"
   },
   "devDependencies": {
+    "@semantic-release/commit-analyzer": "6.3.3",
+    "@semantic-release/github": "5.5.5",
+    "@semantic-release/release-notes-generator": "7.3.3",
     "faker": "^4.1.0",
     "jest": "^24.9.0",
     "knex-db-manager": "0.5.0",
     "nodemon": "1.19.4",
-    "pg-escape": "0.2.0"
+    "pg-escape": "0.2.0",
+    "semantic-release": "15.13.30"
   }
 }
