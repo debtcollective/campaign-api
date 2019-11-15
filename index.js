@@ -51,6 +51,8 @@ const server = new ApolloServer({
 	cors: corsOptions,
 	typeDefs,
 	resolvers,
+	introspection: process.env.INTROSPECTION,
+	playground: process.env.PLAYGROUND,
 	context: ({ req }) => {
 		if (!req.headers.cookie) {
 			return {};
