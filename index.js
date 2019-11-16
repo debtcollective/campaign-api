@@ -1,4 +1,10 @@
 /**
+ * Load environment variables
+ * https://github.com/motdotla/dotenv
+ */
+require("dotenv").config();
+
+/**
  * Objection related code
  */
 const Knex = require("knex");
@@ -16,6 +22,7 @@ Model.knex(knex);
  * GraphQL related code
  */
 const cookie = require("cookie");
+const jwt = require("jsonwebtoken");
 const { ApolloServer } = require("apollo-server");
 const { GraphQLJSONObject } = require("graphql-type-json");
 
@@ -55,16 +62,28 @@ const server = new ApolloServer({
 	playground: process.env.PLAYGROUND,
 	context: ({ req }) => {
 		if (!req.headers.cookie) {
-			return {};
+			return { user: {} };
 		}
 
+		let decoded;
 		const cookies = cookie.parse(req.headers.cookie);
+		const authCookieName = process.env.SSO_COOKIE_NAME;
+		const authToken = cookies[authCookieName];
 
-		// const jwt = cookies[JWT_COOKIE_NAME];
-		// const payload, headers = JWT.decode(jwt)
-		// const user = User.findOrCreate(jwtPayload)
+		try {
+			decoded = jwt.verify(authToken, process.env.SSO_JWT_SECRET);
+		} catch (err) {
+			// eslint-disable-next-line
+      console.error(err);
+			return { user: {} };
+		}
 
-		return {};
+		// TODO: create the user entry within our service database
+		// const user = User.findOrCreateFromJWT(decoded);
+		// User.findByExternalId(decoded.external_id)
+		// const user = User.create({external_id, ...rest })
+
+		return { user: decoded };
 	}
 });
 

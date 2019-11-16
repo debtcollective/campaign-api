@@ -5,6 +5,10 @@ const typeDefs = gql`
 
 	type User {
 		id: ID!
+		email: String!
+		username: String!
+		name: String
+		external_id: ID!
 	}
 
 	type Action {

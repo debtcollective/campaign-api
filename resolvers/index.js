@@ -4,21 +4,29 @@ const { UserAction } = require("../models/UserAction");
 
 const queryResolvers = {
 	/**
-	 * Retrive user using Cookies
-	 */
+   * Retrive user using Cookies
+   */
 	currentUser: async (root, args, context) => {
-		return { id: 1 };
+		if (context.user.id) {
+			throw Error("Unauthenticated user");
+		}
+
+		return {
+			...context.user,
+			// TODO: this id should be related the id generated after create the user using the auth token
+			id: 2
+		};
 	},
 	/**
-	 * Retrieve all the campaigns alongside its actions
-	 */
+   * Retrieve all the campaigns alongside its actions
+   */
 	campaigns: async () => {
 		const campaigns = await Campaign.query().eager("actions");
 		return campaigns;
 	},
 	/**
-	 * Retrive the actions for a given user and campaign
-	 */
+   * Retrive the actions for a given user and campaign
+   */
 	userCampaignsActions: async (root, args) => {
 		const { campaignId, userId } = args;
 
@@ -32,8 +40,8 @@ const queryResolvers = {
 		return campaignActions;
 	},
 	/**
-	 * Retrieve the records of UserActions for a given user and campaign
-	 */
+   * Retrieve the records of UserActions for a given user and campaign
+   */
 	userActions: async (root, { userId, campaignId }) => {
 		// TODO: avoid the short-circuit and add conditionally "where" filter
 		if (campaignId) {
@@ -54,8 +62,8 @@ const queryResolvers = {
 
 const mutationResolvers = {
 	/**
-	 * Updates a record of UserAction to completed or not
-	 */
+   * Updates a record of UserAction to completed or not
+   */
 	userActionUpdate: async (root, { userActionId, completed }) => {
 		const userAction = await UserAction.query().patchAndFetchById(
 			userActionId,
