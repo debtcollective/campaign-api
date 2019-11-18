@@ -61,21 +61,18 @@ const server = new ApolloServer({
 	introspection: process.env.INTROSPECTION,
 	playground: process.env.PLAYGROUND,
 	context: ({ req }) => {
-		if (!req.headers.cookie) {
-			return { user: {} };
-		}
-
 		let decoded;
-		const cookies = cookie.parse(req.headers.cookie);
-		const authCookieName = process.env.SSO_COOKIE_NAME;
-		const authToken = cookies[authCookieName];
 
 		try {
+			const authCookieName = process.env.SSO_COOKIE_NAME;
+			const cookies = cookie.parse(req.headers.cookie);
+			const authToken = cookies[authCookieName];
 			decoded = jwt.verify(authToken, process.env.SSO_JWT_SECRET);
 		} catch (err) {
 			// eslint-disable-next-line
       console.error(err);
-			return { user: {} };
+
+			return { User: {} };
 		}
 
 		// TODO: create the user entry within our service database
@@ -83,7 +80,7 @@ const server = new ApolloServer({
 		// User.findByExternalId(decoded.external_id)
 		// const user = User.create({external_id, ...rest })
 
-		return { user: decoded };
+		return { User: decoded };
 	}
 });
 

@@ -1,3 +1,4 @@
+const { AuthenticationError } = require("apollo-server");
 const { Campaign } = require("../models/Campaign");
 const { User } = require("../models/User");
 const { UserAction } = require("../models/UserAction");
@@ -7,12 +8,12 @@ const queryResolvers = {
    * Retrive user using Cookies
    */
 	currentUser: async (root, args, context) => {
-		if (context.user.id) {
-			throw Error("Unauthenticated user");
+		if (!context.User.external_id) {
+			throw new AuthenticationError("No user logged in");
 		}
 
 		return {
-			...context.user,
+			...context.User,
 			// TODO: this id should be related the id generated after create the user using the auth token
 			id: 2
 		};
