@@ -33,7 +33,7 @@ class User extends Model {
       },
       userActions: {
         relation: Model.HasManyRelation,
-        modelClass: `${__dirname}'/UserAction`,
+        modelClass: `${__dirname}/UserAction`,
         join: {
           from: 'users.id',
           to: 'userActions.userId'
