@@ -23,126 +23,126 @@ const knex = Knex(knexConfig);
 Model.knex(knex);
 
 const main = async () => {
-	await User.query().delete();
-	await Action.query().delete();
-	await Campaign.query().delete();
-	await UserAction.query().delete();
+  await User.query().delete();
+  await Action.query().delete();
+  await Campaign.query().delete();
+  await UserAction.query().delete();
 
-	// Create a user with campaign and actions
-	const user = await User.query().insert(createUser());
-	const campaignOne = await user
-		.$relatedQuery("campaigns")
-		.insert(createCampaign());
-	await campaignOne.$relatedQuery("actions").insert([
-		...createActions(
-			{
-				type: "LINK",
-				config: {
-					href: faker.internet.url(),
-					text: faker.random.words(2),
-					target: "_blank",
-					delay: 200
-				}
-			},
-			1
-		),
-		...createActions(
-			{
-				type: "LINK",
-				config: {
-					href: faker.internet.url(),
-					text: faker.random.words(2),
-					target: "_blank",
-					delay: 200
-				}
-			},
-			1
-		),
-		...createActions(
-			{
-				type: "LINK",
-				config: {
-					href: faker.internet.url(),
-					text: faker.random.words(2),
-					target: "_blank",
-					delay: 200
-				}
-			},
-			1
-		)
-	]);
+  // Create a user with campaign and actions
+  const user = await User.query().insert(createUser());
+  const campaignOne = await user
+    .$relatedQuery("campaigns")
+    .insert(createCampaign());
+  await campaignOne.$relatedQuery("actions").insert([
+    ...createActions(
+      {
+        type: "LINK",
+        config: {
+          href: faker.internet.url(),
+          text: faker.random.words(2),
+          target: "_blank",
+          delay: 200
+        }
+      },
+      1
+    ),
+    ...createActions(
+      {
+        type: "LINK",
+        config: {
+          href: faker.internet.url(),
+          text: faker.random.words(2),
+          target: "_blank",
+          delay: 200
+        }
+      },
+      1
+    ),
+    ...createActions(
+      {
+        type: "LINK",
+        config: {
+          href: faker.internet.url(),
+          text: faker.random.words(2),
+          target: "_blank",
+          delay: 200
+        }
+      },
+      1
+    )
+  ]);
 
-	// Create a widow campaign
-	const campaignTwo = await Campaign.query().insert(createCampaign());
-	await campaignTwo.$relatedQuery("actions").insert(
-		createActions({
-			type: "LINK",
-			config: {
-				href: faker.internet.url(),
-				text: faker.random.words(2),
-				target: "_blank",
-				delay: 200
-			}
-		})
-	);
+  // Create a widow campaign
+  const campaignTwo = await Campaign.query().insert(createCampaign());
+  await campaignTwo.$relatedQuery("actions").insert(
+    createActions({
+      type: "LINK",
+      config: {
+        href: faker.internet.url(),
+        text: faker.random.words(2),
+        target: "_blank",
+        delay: 200
+      }
+    })
+  );
 
-	// Attach an extra campaign to the user
-	const campaignThree = await user
-		.$relatedQuery("campaigns")
-		.insert(createCampaign());
-	await campaignThree.$relatedQuery("actions").insert(
-		createActions({
-			type: "LINK",
-			config: {
-				href: faker.internet.url(),
-				text: faker.random.words(2),
-				target: "_blank",
-				delay: 200
-			}
-		})
-	);
+  // Attach an extra campaign to the user
+  const campaignThree = await user
+    .$relatedQuery("campaigns")
+    .insert(createCampaign());
+  await campaignThree.$relatedQuery("actions").insert(
+    createActions({
+      type: "LINK",
+      config: {
+        href: faker.internet.url(),
+        text: faker.random.words(2),
+        target: "_blank",
+        delay: 200
+      }
+    })
+  );
 
-	// Create a widow actions
-	await Action.query().insert(
-		createActions({
-			type: "LINK",
-			config: {
-				href: faker.internet.url(),
-				text: faker.random.words(2),
-				target: "_blank",
-				delay: 200
-			}
-		})[0]
-	);
+  // Create a widow actions
+  await Action.query().insert(
+    createActions({
+      type: "LINK",
+      config: {
+        href: faker.internet.url(),
+        text: faker.random.words(2),
+        target: "_blank",
+        delay: 200
+      }
+    })[0]
+  );
 
-	// Create an entry of UserAction
-	await UserAction.query().insert({
-		actionId: campaignOne.actions[0].id,
-		campaignId: campaignOne.id,
-		userId: user.id,
-		completed: false
-	});
+  // Create an entry of UserAction
+  await UserAction.query().insert({
+    actionId: campaignOne.actions[0].id,
+    campaignId: campaignOne.id,
+    userId: user.id,
+    completed: false
+  });
 
-	await UserAction.query().insert({
-		actionId: campaignOne.actions[1].id,
-		campaignId: campaignOne.id,
-		userId: user.id,
-		completed: false
-	});
+  await UserAction.query().insert({
+    actionId: campaignOne.actions[1].id,
+    campaignId: campaignOne.id,
+    userId: user.id,
+    completed: false
+  });
 
-	await UserAction.query().insert({
-		actionId: campaignOne.actions[2].id,
-		campaignId: campaignOne.id,
-		userId: user.id,
-		completed: false
-	});
+  await UserAction.query().insert({
+    actionId: campaignOne.actions[2].id,
+    campaignId: campaignOne.id,
+    userId: user.id,
+    completed: false
+  });
 
-	await UserAction.query().insert({
-		actionId: campaignThree.actions[0].id,
-		campaignId: campaignThree.id,
-		userId: user.id,
-		completed: true
-	});
+  await UserAction.query().insert({
+    actionId: campaignThree.actions[0].id,
+    campaignId: campaignThree.id,
+    userId: user.id,
+    completed: true
+  });
 };
 
 main();

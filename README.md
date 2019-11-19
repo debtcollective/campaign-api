@@ -41,6 +41,8 @@ Runs the service that expose a GraphQL endpoint.
 yarn start
 ```
 
+> NOTE: If you need to have some data for testing/development proposes you may want to take a look to models/stubs/development.seed.js file in order to populate your development database with some data
+
 ### Running with Docker
 
 You can use `docker-compose` to run the project with Docker if you prefer that, or to test that the image is building correctly.
