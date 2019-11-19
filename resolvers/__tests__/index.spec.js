@@ -1,6 +1,8 @@
 const Knex = require("knex");
 const knexConfig = require("../../knexfile");
 const { Model } = require("objection");
+const faker = require("faker");
+const { AuthenticationError } = require("apollo-server");
 
 const { Action } = require("../../models/Action");
 const { Campaign } = require("../../models/Campaign");
@@ -97,6 +99,26 @@ describe("Query resolvers", () => {
 
 		expect(userActions).toHaveLength(1);
 		expect(userActions).toEqual(expect.arrayContaining([stubs.userActions[1]]));
+	});
+
+	it("returns the injected 'User' as a context with #currentUser", async () => {
+		const context = {
+			User: createUser({ external_id: faker.random.number() })
+		};
+		const currentUser = await queryResolvers.currentUser(null, null, context);
+
+		expect(currentUser.email).toEqual(context.User.email);
+	});
+
+	it("throws authentication error if 'User' doesn't have external_id", async () => {
+		// NOTE: external_id is a required field that we expect to have in order to match the user across our apps
+		const context = {
+			User: createUser({ external_id: undefined })
+		};
+
+		await expect(
+			queryResolvers.currentUser(null, null, context)
+		).rejects.toThrow(AuthenticationError);
 	});
 });
 
