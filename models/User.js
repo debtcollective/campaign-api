@@ -1,48 +1,48 @@
-const { Model } = require("objection");
+const { Model } = require('objection')
 
 class User extends Model {
-  static get tableName() {
-    return "users";
+  static get tableName () {
+    return 'users'
   }
 
-  static get jsonSchema() {
+  static get jsonSchema () {
     return {
-      type: "object",
-      required: ["email"],
+      type: 'object',
+      required: ['email'],
 
       properties: {
-        id: { type: "integer" },
-        email: { type: "string", minLength: 1, maxLength: 255 }
+        id: { type: 'integer' },
+        email: { type: 'string', minLength: 1, maxLength: 255 }
       }
-    };
+    }
   }
 
-  static get relationMappings() {
+  static get relationMappings () {
     return {
       campaigns: {
         relation: Model.ManyToManyRelation,
-        modelClass: __dirname + "/Campaign",
+        modelClass: `${__dirname}/Campaign`,
         join: {
-          from: "users.id",
+          from: 'users.id',
           through: {
-            from: "users_campaigns.userId",
-            to: "users_campaigns.campaignId"
+            from: 'users_campaigns.userId',
+            to: 'users_campaigns.campaignId'
           },
-          to: "campaigns.id"
+          to: 'campaigns.id'
         }
       },
       userActions: {
         relation: Model.HasManyRelation,
-        modelClass: __dirname + "/UserAction",
+        modelClass: `${__dirname}'/UserAction`,
         join: {
-          from: "users.id",
-          to: "userActions.userId"
+          from: 'users.id',
+          to: 'userActions.userId'
         }
       }
-    };
+    }
   }
 }
 
 module.exports = {
   User
-};
+}
