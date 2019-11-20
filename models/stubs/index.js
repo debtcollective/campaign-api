@@ -1,4 +1,4 @@
-const faker = require("faker");
+const faker = require('faker')
 
 module.exports = {
   createUser: fixedData => ({
@@ -10,17 +10,17 @@ module.exports = {
     slug: faker.lorem
       .words(2)
       .toLowerCase()
-      .split(" ")
-      .join("-"),
+      .split(' ')
+      .join('-'),
     ...fixedData
   }),
   createActions: (fixedData, amount = 2) => {
     return Array(amount).fill({
       title: faker.lorem.words(2),
       description: faker.lorem.words(10),
-      type: "Retweet",
+      type: 'Retweet',
       config: { tweet_id: faker.random.number() },
       ...fixedData
-    });
+    })
   }
-};
+}

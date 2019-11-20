@@ -1,7 +1,7 @@
-const { AuthenticationError } = require("apollo-server");
-const { Campaign } = require("../models/Campaign");
-const { User } = require("../models/User");
-const { UserAction } = require("../models/UserAction");
+const { AuthenticationError } = require('apollo-server')
+const { Campaign } = require('../models/Campaign')
+const { User } = require('../models/User')
+const { UserAction } = require('../models/UserAction')
 
 const queryResolvers = {
   /**
@@ -9,36 +9,36 @@ const queryResolvers = {
    */
   currentUser: async (root, args, context) => {
     if (!context.User.external_id) {
-      throw new AuthenticationError("No user logged in");
+      throw new AuthenticationError('No user logged in')
     }
 
     return {
       ...context.User,
       // TODO: this id should be related the id generated after create the user using the auth token
       id: 2
-    };
+    }
   },
   /**
    * Retrieve all the campaigns alongside its actions
    */
   campaigns: async () => {
-    const campaigns = await Campaign.query().eager("actions");
-    return campaigns;
+    const campaigns = await Campaign.query().eager('actions')
+    return campaigns
   },
   /**
    * Retrive the actions for a given user and campaign
    */
   userCampaignsActions: async (root, args) => {
-    const { campaignId, userId } = args;
+    const { campaignId, userId } = args
 
     const result = await User.query()
       .findById(userId)
-      .joinEager("campaigns.actions")
-      .where("campaigns.id", campaignId);
+      .joinEager('campaigns.actions')
+      .where('campaigns.id', campaignId)
     // TODO: we need to avoid to retrieve an array since we look for id
-    const campaignActions = result.campaigns[0].actions;
+    const campaignActions = result.campaigns[0].actions
 
-    return campaignActions;
+    return campaignActions
   },
   /**
    * Retrieve the records of UserActions for a given user and campaign
@@ -48,18 +48,18 @@ const queryResolvers = {
     if (campaignId) {
       const result = await User.query()
         .findById(userId)
-        .joinEager("userActions")
-        .where("campaignId", campaignId);
+        .joinEager('userActions')
+        .where('campaignId', campaignId)
 
-      return result.userActions;
+      return result.userActions
     }
 
     const result = await User.query()
       .findById(userId)
-      .joinEager("userActions");
-    return result.userActions;
+      .joinEager('userActions')
+    return result.userActions
   }
-};
+}
 
 const mutationResolvers = {
   /**
@@ -71,13 +71,13 @@ const mutationResolvers = {
       {
         completed
       }
-    );
+    )
 
-    return userAction;
+    return userAction
   }
-};
+}
 
 module.exports = {
   queryResolvers,
   mutationResolvers
-};
+}

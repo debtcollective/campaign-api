@@ -5,26 +5,8 @@
 		"node": true,
 		"jest": true
 	},
-	"extends": "eslint:recommended",
+	"extends": ["eslint:recommended", "standard", "plugin:jest/recommended"],
 	"parserOptions": {
 		"ecmaVersion": 2018
-	},
-	"rules": {
-		"indent": [
-			"error",
-			2
-		],
-		"linebreak-style": [
-			"error",
-			"unix"
-		],
-		"quotes": [
-			"error",
-			"double"
-		],
-		"semi": [
-			"error",
-			"always"
-		]
 	}
 }

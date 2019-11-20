@@ -2,30 +2,30 @@
  * Load environment variables
  * https://github.com/motdotla/dotenv
  */
-require("dotenv").config();
+require('dotenv').config()
 
 /**
  * Objection related code
  */
-const Knex = require("knex");
-const { Model } = require("objection");
+const Knex = require('knex')
+const { Model } = require('objection')
 
 // Initialize knex.
 // eslint-disable-next-line
 const knex = Knex(knexConfig);
-Model.knex(knex);
+Model.knex(knex)
 
 /**
  * GraphQL related code
  */
-const cookie = require("cookie");
-const jwt = require("jsonwebtoken");
-const { ApolloServer } = require("apollo-server");
-const { GraphQLJSONObject } = require("graphql-type-json");
-const knexConfig = require("./knexfile.js");
-const typeDefs = require("./schema");
-const { Action } = require("./models/Action");
-const { queryResolvers, mutationResolvers } = require("./resolvers");
+const cookie = require('cookie')
+const jwt = require('jsonwebtoken')
+const { ApolloServer } = require('apollo-server')
+const { GraphQLJSONObject } = require('graphql-type-json')
+const knexConfig = require('./knexfile.js')
+const typeDefs = require('./schema')
+const { Action } = require('./models/Action')
+const { queryResolvers, mutationResolvers } = require('./resolvers')
 
 const resolvers = {
   /**
@@ -35,25 +35,25 @@ const resolvers = {
    */
   JSONObject: GraphQLJSONObject,
   Query: {
-    ...queryResolvers,
+    ...queryResolvers
   },
   Mutation: {
-    ...mutationResolvers,
+    ...mutationResolvers
   },
   // Allow to append action data into the UserAction request
   UserAction: {
     action: async (userAction) => {
-      const { actionId } = userAction;
-      const result = await Action.query().findById(actionId);
-      return result;
-    },
-  },
-};
+      const { actionId } = userAction
+      const result = await Action.query().findById(actionId)
+      return result
+    }
+  }
+}
 
 const corsOptions = {
-  origin: "http://campaign.lvh.me:8000",
-  credentials: true,
-};
+  origin: 'http://campaign.lvh.me:8000',
+  credentials: true
+}
 
 const server = new ApolloServer({
   cors: corsOptions,
@@ -62,18 +62,18 @@ const server = new ApolloServer({
   introspection: process.env.INTROSPECTION,
   playground: process.env.PLAYGROUND,
   context: ({ req }) => {
-    let decoded;
+    let decoded
 
     try {
-      const authCookieName = process.env.SSO_COOKIE_NAME;
-      const cookies = cookie.parse(req.headers.cookie);
-      const authToken = cookies[authCookieName];
-      decoded = jwt.verify(authToken, process.env.SSO_JWT_SECRET);
+      const authCookieName = process.env.SSO_COOKIE_NAME
+      const cookies = cookie.parse(req.headers.cookie)
+      const authToken = cookies[authCookieName]
+      decoded = jwt.verify(authToken, process.env.SSO_JWT_SECRET)
     } catch (err) {
       // eslint-disable-next-line
       console.error(err);
 
-      return { User: {} };
+      return { User: {} }
     }
 
     // TODO: create the user entry within our service database
@@ -81,11 +81,11 @@ const server = new ApolloServer({
     // User.findByExternalId(decoded.external_id)
     // const user = User.create({external_id, ...rest })
 
-    return { User: decoded };
-  },
-});
+    return { User: decoded }
+  }
+})
 
 server.listen().then(({ url }) => {
   // eslint-disable-next-line
   console.log(`🚀 Server ready at ${url}`);
-});
+})
