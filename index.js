@@ -1,7 +1,3 @@
-/**
- * Load environment variables
- * https://github.com/motdotla/dotenv
- */
 require('dotenv').config()
 
 /**
@@ -12,13 +8,20 @@ require('./lib/objection')
 /**
  * GraphQL related code
  */
-const cookie = require('cookie')
-const jwt = require('jsonwebtoken')
+const { Action } = require('./models/Action')
 const { ApolloServer } = require('apollo-server')
 const { GraphQLJSONObject } = require('graphql-type-json')
-const typeDefs = require('./schema')
-const { Action } = require('./models/Action')
+const { Model } = require('objection')
 const { queryResolvers, mutationResolvers } = require('./resolvers')
+const cookie = require('cookie')
+const jwt = require('jsonwebtoken')
+const Knex = require('knex')
+const knexConfig = require('./knexfile.js')
+const typeDefs = require('./schema')
+
+// Initialize knex.
+const knex = Knex(knexConfig)
+Model.knex(knex)
 
 const resolvers = {
   /**
