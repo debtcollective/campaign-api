@@ -1,5 +1,7 @@
 const cookie = require('cookie')
 const jwt = require('jsonwebtoken')
+const { User } = require('../models/User')
+const { findOrCreate } = require('../models/utils')
 
 const setContext = async ({ req }) => {
   let decoded
@@ -17,11 +19,12 @@ const setContext = async ({ req }) => {
   }
 
   // TODO: create the user entry within our service database
-  // const user = User.findOrCreateFromJWT(decoded);
+  const { email, external_id, username } = decoded
+  const user = await findOrCreate(User, { email, external_id, username })
   // User.findByExternalId(decoded.external_id)
   // const user = User.create({external_id, ...rest })
 
-  return { User: decoded }
+  return { User: user }
 }
 
 module.exports = {
