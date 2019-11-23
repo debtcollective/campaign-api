@@ -1,7 +1,7 @@
 const cookie = require('cookie')
 const jwt = require('jsonwebtoken')
 
-const setContext = ({ req }) => {
+const setContext = async ({ req }) => {
   let decoded
 
   try {
@@ -24,4 +24,6 @@ const setContext = ({ req }) => {
   return { User: decoded }
 }
 
-module.exports = setContext
+module.exports = {
+  setContext
+}

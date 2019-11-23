@@ -2,7 +2,7 @@ const { AuthenticationError } = require('apollo-server')
 const { Campaign } = require('../models/Campaign')
 const { User } = require('../models/User')
 const { UserAction } = require('../models/UserAction')
-const setContext = require('./context')
+const { setContext } = require('./context')
 
 const queryResolvers = {
   /**
