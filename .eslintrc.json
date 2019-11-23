@@ -8,5 +8,8 @@
 	"extends": ["eslint:recommended", "standard", "plugin:jest/recommended"],
 	"parserOptions": {
 		"ecmaVersion": 2018
+	},
+	"rules": {
+		"camelcase": "off"
 	}
 }
