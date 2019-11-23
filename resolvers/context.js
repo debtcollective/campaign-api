@@ -18,11 +18,8 @@ const setContext = async ({ req }) => {
     return { User: {} }
   }
 
-  // TODO: create the user entry within our service database
   const { email, external_id, username } = decoded
   const user = await findOrCreate(User, { email, external_id, username })
-  // User.findByExternalId(decoded.external_id)
-  // const user = User.create({external_id, ...rest })
 
   return { User: user }
 }
