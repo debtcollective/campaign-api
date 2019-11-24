@@ -1,15 +1,12 @@
-const Knex = require('knex')
-const { Model } = require('objection')
-const knexConfig = require('../../knexfile')
+// Init Ojbection
+require('../../lib/objection')
 
 const { Action } = require('../../models/Action')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
 const { UserAction } = require('../../models/UserAction')
 const { createActions, createCampaign, createUser } = require('../stubs')
-
-const knex = Knex(knexConfig)
-Model.knex(knex)
+const _ = require('lodash')
 
 beforeAll(async () => {
   await User.query().delete()
@@ -57,11 +54,12 @@ describe('model structure', () => {
     const createdUser = await User.query()
       .findById(user.id)
       .joinEager('campaigns.actions')
-    const userCampaign = createdUser.campaigns[0]
 
-    expect(userCampaign.actions).toEqual(
-      expect.arrayContaining([campaign.actions[0], campaign.actions[1]])
-    )
+    const userCampaign = createdUser.campaigns[0]
+    const userActionsIds = _.map(userCampaign.actions, 'id')
+    const campaignActionsId = [campaign.actions[0].id, campaign.actions[1].id]
+
+    expect(userActionsIds.sort()).toEqual(campaignActionsId.sort())
   })
 
   it('allows to query user campaign actions', async () => {
@@ -82,10 +80,14 @@ describe('model structure', () => {
       .where('campaigns.id', campaignOne.id)
     const userCampaign = createdUser.campaigns[0]
 
+    const userActionsIds = _.map(userCampaign.actions, 'id')
+    const campaignActionsId = [
+      campaignOne.actions[0].id,
+      campaignOne.actions[1].id
+    ]
+
     expect(createdUser.campaigns).toHaveLength(1)
-    expect(userCampaign.actions).toEqual(
-      expect.arrayContaining([campaignOne.actions[0], campaignOne.actions[1]])
-    )
+    expect(userActionsIds.sort()).toEqual(campaignActionsId.sort())
   })
 
   it("allows create 'UserAction' with given campaign, action and user id's", async () => {

@@ -1,4 +1,4 @@
-const { Model } = require('objection')
+const Model = require('../lib/objection')
 
 class User extends Model {
   static get tableName () {
@@ -25,8 +25,8 @@ class User extends Model {
         join: {
           from: 'users.id',
           through: {
-            from: 'users_campaigns.userId',
-            to: 'users_campaigns.campaignId'
+            from: 'usersCampaigns.userId',
+            to: 'usersCampaigns.campaignId'
           },
           to: 'campaigns.id'
         }

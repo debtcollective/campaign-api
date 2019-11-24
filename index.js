@@ -5,15 +5,9 @@
 require('dotenv').config()
 
 /**
- * Objection related code
+ * Init Objection
  */
-const Knex = require('knex')
-const { Model } = require('objection')
-
-// Initialize knex.
-// eslint-disable-next-line
-const knex = Knex(knexConfig);
-Model.knex(knex)
+require('./lib/objection')
 
 /**
  * GraphQL related code
@@ -22,7 +16,6 @@ const cookie = require('cookie')
 const jwt = require('jsonwebtoken')
 const { ApolloServer } = require('apollo-server')
 const { GraphQLJSONObject } = require('graphql-type-json')
-const knexConfig = require('./knexfile.js')
 const typeDefs = require('./schema')
 const { Action } = require('./models/Action')
 const { queryResolvers, mutationResolvers } = require('./resolvers')
@@ -42,7 +35,7 @@ const resolvers = {
   },
   // Allow to append action data into the UserAction request
   UserAction: {
-    action: async (userAction) => {
+    action: async userAction => {
       const { actionId } = userAction
       const result = await Action.query().findById(actionId)
       return result
@@ -71,7 +64,7 @@ const server = new ApolloServer({
       decoded = jwt.verify(authToken, process.env.SSO_JWT_SECRET)
     } catch (err) {
       // eslint-disable-next-line
-      console.error(err);
+      console.error(err)
 
       return { User: {} }
     }
@@ -87,5 +80,5 @@ const server = new ApolloServer({
 
 server.listen().then(({ url }) => {
   // eslint-disable-next-line
-  console.log(`🚀 Server ready at ${url}`);
+  console.log(`🚀 Server ready at ${url}`)
 })

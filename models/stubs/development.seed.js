@@ -8,19 +8,15 @@
  * `node ./models/stubs/development.seed.js`
  */
 
+// init Objection
+require('../../lib/objection.js')
 const faker = require('faker')
-const Knex = require('knex')
-const knexConfig = require('../../knexfile')
-const { Model } = require('objection')
 
 const { Action } = require('../../models/Action')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
 const { UserAction } = require('../../models/UserAction')
 const { createActions, createCampaign, createUser } = require('../stubs')
-
-const knex = Knex(knexConfig)
-Model.knex(knex)
 
 const main = async () => {
   await User.query().delete()
