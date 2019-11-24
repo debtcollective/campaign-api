@@ -1,31 +1,32 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('userActions', table => {
+exports.up = function(knex) {
+  return knex.schema.createTable('user_actions', table => {
     table.increments('id').primary()
     table
-      .integer('userId')
+      .integer('user_id')
       .unsigned()
       .references('id')
       .inTable('users')
       .onDelete('SET NULL')
       .index()
     table
-      .integer('actionId')
+      .integer('action_id')
       .unsigned()
       .references('id')
       .inTable('actions')
       .onDelete('SET NULL')
       .index()
     table
-      .integer('campaignId')
+      .integer('campaign_id')
       .unsigned()
       .references('id')
       .inTable('campaigns')
       .onDelete('SET NULL')
       .index()
     table.boolean('completed')
+    table.timestamps(false, true)
   })
 }
 
-exports.down = function (knex) {
+exports.down = function(knex) {
   return knex.schema.dropTableIfExists('users_actions')
 }
