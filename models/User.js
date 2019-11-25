@@ -1,8 +1,31 @@
 const Model = require('../lib/objection')
+const _ = require('lodash')
 
 class User extends Model {
   static get tableName () {
     return 'users'
+  }
+
+  static get SSO_ATTRIBUTES () {
+    return ['id', 'external_id', 'username', 'email']
+  }
+
+  static async findOrCreateFromSSO (data) {
+    const { external_id: externalId } = data
+    let user = await User.query().findOne({ external_id: externalId })
+
+    const filteredData = _.pick(data, this.SSO_ATTRIBUTES)
+
+    if (user) {
+      user = await user.$query().patchAndFetchById(user.id, filteredData)
+    } else {
+      user = await User.query().insert({
+        external_id: externalId,
+        ...filteredData
+      })
+    }
+
+    return user
   }
 
   static get jsonSchema () {
