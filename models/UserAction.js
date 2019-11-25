@@ -1,6 +1,6 @@
-const Model = require('../lib/objection')
+const BaseModel = require('./BaseModel')
 
-class UserAction extends Model {
+class UserAction extends BaseModel {
   static get tableName () {
     return 'userActions'
   }
@@ -22,7 +22,7 @@ class UserAction extends Model {
   static get relationMappings () {
     return {
       user: {
-        relation: Model.BelongsToOneRelation,
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: `${__dirname}/User`,
         join: {
           from: 'userActions.userId',
