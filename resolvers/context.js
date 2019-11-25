@@ -11,7 +11,7 @@ const setContext = async ({ req }) => {
     const authToken = cookies[authCookieName]
     decoded = jwt.verify(authToken, process.env.SSO_JWT_SECRET)
   } catch (err) {
-    // eslint-disable-next-line
+    // eslint-disable-next-line no-console
     console.error(err)
 
     return { User: {} }
