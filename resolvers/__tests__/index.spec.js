@@ -1,8 +1,6 @@
-const Knex = require('knex')
-const { Model } = require('objection')
+require('../../lib/objection')
 const faker = require('faker')
 const { AuthenticationError } = require('apollo-server')
-const knexConfig = require('../../knexfile')
 
 const { Action } = require('../../models/Action')
 const { Campaign } = require('../../models/Campaign')
@@ -14,9 +12,7 @@ const {
   createUser
 } = require('../../models/stubs')
 const { queryResolvers, mutationResolvers } = require('../')
-
-const knex = Knex(knexConfig)
-Model.knex(knex)
+const _ = require('lodash')
 
 const stubs = {}
 
@@ -69,8 +65,10 @@ beforeAll(async () => {
 describe('Query resolvers', () => {
   it('returns all campaigns with #campaigns method', async () => {
     const campaigns = await queryResolvers.campaigns()
+    const campaignIds = _.map(campaigns, 'id').sort()
+    const stubCampaignIds = _.map(stubs.campaigns, 'id').sort()
 
-    expect(campaigns).toEqual(expect.arrayContaining(stubs.campaigns))
+    expect(campaignIds).toEqual(stubCampaignIds)
   })
 
   it('returns actions for certain user campaign with #userCampaignsActions method', async () => {
@@ -79,16 +77,23 @@ describe('Query resolvers', () => {
       campaignId: targetedCampaign.id,
       userId: stubs.user.id
     })
+    const actionsIds = _.map(actions, 'id').sort()
+    const targetedCampaignActionsIds = _.map(
+      targetedCampaign.actions,
+      'id'
+    ).sort()
 
-    expect(actions).toEqual(expect.arrayContaining(targetedCampaign.actions))
+    expect(actionsIds).toEqual(targetedCampaignActionsIds)
   })
 
   it("returns the 'UserActions' for a given user", async () => {
     const userActions = await queryResolvers.userActions(null, {
       userId: stubs.user.id
     })
+    const userActionsIds = _.map(userActions, 'id').sort()
+    const stubUserActionsIds = _.map(stubs.userActions, 'id').sort()
 
-    expect(userActions).toEqual(expect.arrayContaining(stubs.userActions))
+    expect(userActionsIds).toEqual(stubUserActionsIds)
   })
 
   it("returns the 'UserActions' for a given user filtered by campaignId", async () => {
@@ -96,9 +101,11 @@ describe('Query resolvers', () => {
       userId: stubs.user.id,
       campaignId: stubs.campaigns[2].id
     })
+    const userActionsIds = _.map(userActions, 'id').sort()
+    const stubUserActionsIds = [stubs.userActions[1].id]
 
     expect(userActions).toHaveLength(1)
-    expect(userActions).toEqual(expect.arrayContaining([stubs.userActions[1]]))
+    expect(userActionsIds).toEqual(stubUserActionsIds)
   })
 
   it("returns the injected 'User' as a context with #currentUser", async () => {

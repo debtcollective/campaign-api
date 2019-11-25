@@ -1,8 +1,8 @@
-exports.up = function (knex) {
+exports.up = function(knex) {
   return knex.schema.createTable('actions', table => {
     table.increments('id').primary()
     table
-      .integer('campaignId')
+      .integer('campaign_id')
       .unsigned()
       .references('id')
       .inTable('campaigns')
@@ -16,9 +16,10 @@ exports.up = function (knex) {
     table.string('type')
     // A set of arguments needed to built the UI approperly
     table.jsonb('config')
+    table.timestamps(false, true)
   })
 }
 
-exports.down = function (knex) {
+exports.down = function(knex) {
   return knex.schema.dropTableIfExists('actions')
 }
