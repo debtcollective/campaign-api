@@ -18,8 +18,9 @@ const getAllUsersCount = async () => {
 
 test('returns an object with empty user when no auth cookie found', async () => {
   const consoleError = jest.fn()
-  // NOTE: avoid to have the error log we know we have on the test run
+  // NOTE: avoid to log the error message we know we have over the tests
   jest.spyOn(console, 'error').mockImplementationOnce(consoleError)
+
   const req = {
     headers: {
       cookie: ''
@@ -29,7 +30,6 @@ test('returns an object with empty user when no auth cookie found', async () => 
   const context = await setContext({ req })
 
   expect(context).toEqual({ User: {} })
-  expect(consoleError).toHaveBeenCalledTimes(1)
 })
 
 test('returns an object with user when auth cookie is found', async () => {
