@@ -26,6 +26,10 @@ beforeEach(async () => {
   await User.query().delete()
 })
 
+afterAll(async () => {
+  await User.query().delete()
+})
+
 describe('#findOrCreateFromSSO', () => {
   it('creates a new User entry when user not found', async () => {
     const prevAmountUsers = await getAllUsersCount()

@@ -10,6 +10,10 @@ beforeEach(async () => {
   await User.query().delete()
 })
 
+afterAll(async () => {
+  await User.query().delete()
+})
+
 const getAllUsersCount = async () => {
   const usersCount = await User.query().count('id')
 

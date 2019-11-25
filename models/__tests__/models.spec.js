@@ -14,6 +14,12 @@ beforeAll(async () => {
   await Campaign.query().delete()
 })
 
+afterAll(async () => {
+  await User.query().delete()
+  await Action.query().delete()
+  await Campaign.query().delete()
+})
+
 describe('model structure', () => {
   it('allows to insert actions into campaigns', async () => {
     const campaign = await Campaign.query().insert(createCampaign())
