@@ -1,7 +1,6 @@
 const cookie = require('cookie')
 const jwt = require('jsonwebtoken')
 const { User } = require('../models/User')
-const { findOrCreate } = require('../models/utils')
 
 const setContext = async ({ req }) => {
   let decoded
@@ -18,8 +17,7 @@ const setContext = async ({ req }) => {
     return { User: {} }
   }
 
-  const { email, external_id, username } = decoded
-  const user = await findOrCreate(User, { email, external_id, username })
+  const user = await User.findOrCreateFromSSO(decoded)
 
   return { User: user }
 }
