@@ -6,6 +6,14 @@ const { setContext } = require('./context')
 
 const queryResolvers = {
   /**
+   * Retieve the campaign scoped for further requests
+   */
+  currentCampaign: async (root, args, context) => {
+    return {
+      ...context.UserCampaign
+    }
+  },
+  /**
    * Retrive user using Cookies
    */
   currentUser: async (root, args, context) => {
