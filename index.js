@@ -1,3 +1,7 @@
+/**
+ * Load environment variables
+ * https://github.com/motdotla/dotenv
+ */
 require('dotenv').config()
 
 /**
@@ -11,15 +15,8 @@ require('./lib/objection')
 const { Action } = require('./models/Action')
 const { ApolloServer } = require('apollo-server')
 const { GraphQLJSONObject } = require('graphql-type-json')
-const { Model } = require('objection')
 const { queryResolvers, mutationResolvers, setContext } = require('./resolvers')
-const Knex = require('knex')
-const knexConfig = require('./knexfile.js')
 const typeDefs = require('./schema')
-
-// Initialize knex.
-const knex = Knex(knexConfig)
-Model.knex(knex)
 
 const resolvers = {
   /**
