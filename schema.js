@@ -48,6 +48,10 @@ const typeDefs = gql`
     action: Action
   }
 
+  type Ok {
+    ok: Boolean!
+  }
+
   type Query {
     currentCampaign: Campaign!
     currentUser: User!
@@ -58,6 +62,7 @@ const typeDefs = gql`
 
   type Mutation {
     userActionUpdate(userActionId: ID!, completed: Boolean): UserAction!
+    addUserToCampaign(motive: String!): Ok!
   }
 `
 

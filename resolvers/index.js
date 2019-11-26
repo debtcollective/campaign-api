@@ -83,6 +83,17 @@ const mutationResolvers = {
     )
 
     return userAction
+  },
+  addUserToCampaign: async (root, { motive }, context) => {
+    const user = context.User
+    const campaign = context.Campaign
+
+    await user.$relatedQuery('campaigns').relate({
+      ...campaign,
+      data: { motive }
+    })
+
+    return { ok: true }
   }
 }
 

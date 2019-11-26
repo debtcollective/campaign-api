@@ -5,10 +5,9 @@ const { Campaign } = require('../models/Campaign')
 
 const setContext = async ({ req }) => {
   let decoded
-  const motive = req.headers[process.env.REQUEST_DATA_HEADER]
   const context = {
     User: {},
-    UserCampaign: {}
+    Campaign: {}
   }
 
   try {
@@ -26,16 +25,8 @@ const setContext = async ({ req }) => {
   const user = await User.findOrCreateFromSSO(decoded)
   context.User = user
 
-  if (motive) {
-    const campaign = await Campaign.query().first()
-    await user.$relatedQuery('campaigns').relate({
-      ...campaign,
-      data: { motive }
-    })
-  }
-
-  const { campaigns } = await user.$query().joinEager('campaigns')
-  context.UserCampaign = campaigns[0]
+  const campaign = await Campaign.query().first()
+  context.Campaign = campaign
 
   return context
 }
