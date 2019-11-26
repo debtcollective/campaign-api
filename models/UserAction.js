@@ -33,6 +33,4 @@ class UserAction extends BaseModel {
   }
 }
 
-module.exports = {
-  UserAction
-}
+module.exports = UserAction

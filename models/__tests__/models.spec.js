@@ -4,7 +4,7 @@ require('../../lib/objection')
 const { Action } = require('../../models/Action')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
-const { UserAction } = require('../../models/UserAction')
+const UserAction = require('../../models/UserAction')
 const { createActions, createCampaign, createUser } = require('../stubs')
 const _ = require('lodash')
 
