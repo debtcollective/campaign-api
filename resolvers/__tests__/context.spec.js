@@ -1,6 +1,10 @@
 const { setContext } = require('../context')
 const { fakeCookie } = require('../stubs')
 const { User } = require('../../models/User')
+const { Campaign } = require('../../models/Campaign')
+const { createCampaign } = require('../../models/stubs')
+
+const campaignData = createCampaign()
 
 afterEach(() => {
   jest.clearAllMocks()
@@ -8,10 +12,15 @@ afterEach(() => {
 
 beforeEach(async () => {
   await User.query().delete()
+  await Campaign.query().delete()
+
+  // We need to ensure the unique campaign is present
+  await Campaign.query().insert(campaignData)
 })
 
 afterAll(async () => {
   await User.query().delete()
+  await Campaign.query().delete()
 })
 
 const getAllUsersCount = async () => {
@@ -33,7 +42,7 @@ test('returns an object with empty user when no auth cookie found', async () => 
 
   const context = await setContext({ req })
 
-  expect(context).toEqual({ User: {} })
+  expect(context).toEqual(expect.objectContaining({ User: {} }))
 })
 
 test('returns an object with user when auth cookie is found', async () => {
@@ -85,4 +94,24 @@ test('retrieves previously created user if present', async () => {
   const afterAmountUsers = await getAllUsersCount()
 
   expect(afterAmountUsers - prevAmountUsers).toBe(1)
+})
+
+test('attach newly created user to a campaign with a motive', async () => {
+  const motive = 'third-supporter'
+  const req = {
+    headers: {
+      cookie: fakeCookie,
+      'debtcollective-data': motive
+    }
+  }
+
+  const context = await setContext({ req })
+
+  expect(context.UserCampaign).toEqual(
+    expect.objectContaining({
+      name: campaignData.name,
+      slug: campaignData.slug
+    })
+  )
+  expect(context.UserCampaign.data.motive).toEqual(motive)
 })

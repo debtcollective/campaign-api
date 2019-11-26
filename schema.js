@@ -49,6 +49,7 @@ const typeDefs = gql`
   }
 
   type Query {
+    currentCampaign: Campaign!
     currentUser: User!
     campaigns: [Campaign]
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]

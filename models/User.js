@@ -52,7 +52,8 @@ class User extends Model {
           from: 'users.id',
           through: {
             from: 'usersCampaigns.userId',
-            to: 'usersCampaigns.campaignId'
+            to: 'usersCampaigns.campaignId',
+            extra: ['data']
           },
           to: 'campaigns.id'
         }
