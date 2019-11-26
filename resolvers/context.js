@@ -5,7 +5,7 @@ const { Campaign } = require('../models/Campaign')
 
 const setContext = async ({ req }) => {
   let decoded
-  const motive = req.headers['debtcollective-data']
+  const motive = req.headers[process.env.REQUEST_DATA_HEADER]
   const context = {
     User: {},
     UserCampaign: {}
