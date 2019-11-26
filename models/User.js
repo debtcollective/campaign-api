@@ -31,11 +31,11 @@ class User extends Model {
   static get jsonSchema () {
     return {
       type: 'object',
-      required: ['email', 'external_id'],
+      required: ['email', 'externalId'],
 
       properties: {
         id: { type: 'integer' },
-        external_id: { type: 'integer' },
+        externalId: { type: 'integer' },
         username: { type: 'string', minLength: 1, maxLength: 255 },
         email: { type: 'string', minLength: 1, maxLength: 255 },
         avatar_url: { type: 'string', minLength: 1, maxLength: 255 }
