@@ -7,7 +7,7 @@ class User extends Model {
   }
 
   static get SSO_ATTRIBUTES () {
-    return ['id', 'external_id', 'username', 'email']
+    return Object.keys(this.jsonSchema.properties)
   }
 
   static async findOrCreateFromSSO (data) {
@@ -37,7 +37,8 @@ class User extends Model {
         id: { type: 'integer' },
         external_id: { type: 'integer' },
         username: { type: 'string', minLength: 1, maxLength: 255 },
-        email: { type: 'string', minLength: 1, maxLength: 255 }
+        email: { type: 'string', minLength: 1, maxLength: 255 },
+        avatar_url: { type: 'string', minLength: 1, maxLength: 255 }
       }
     }
   }
