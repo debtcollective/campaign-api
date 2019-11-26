@@ -62,6 +62,13 @@ beforeAll(async () => {
   stubs.userActions = [userActionOne, userActionTwo]
 })
 
+afterAll(async () => {
+  await User.query().delete()
+  await Action.query().delete()
+  await Campaign.query().delete()
+  await UserAction.query().delete()
+})
+
 describe('Query resolvers', () => {
   it('returns all campaigns with #campaigns method', async () => {
     const campaigns = await queryResolvers.campaigns()

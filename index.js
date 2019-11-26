@@ -12,13 +12,11 @@ require('./lib/objection')
 /**
  * GraphQL related code
  */
-const cookie = require('cookie')
-const jwt = require('jsonwebtoken')
+const { Action } = require('./models/Action')
 const { ApolloServer } = require('apollo-server')
 const { GraphQLJSONObject } = require('graphql-type-json')
+const { queryResolvers, mutationResolvers, setContext } = require('./resolvers')
 const typeDefs = require('./schema')
-const { Action } = require('./models/Action')
-const { queryResolvers, mutationResolvers } = require('./resolvers')
 
 const resolvers = {
   /**
@@ -54,28 +52,7 @@ const server = new ApolloServer({
   resolvers,
   introspection: process.env.INTROSPECTION,
   playground: process.env.PLAYGROUND,
-  context: ({ req }) => {
-    let decoded
-
-    try {
-      const authCookieName = process.env.SSO_COOKIE_NAME
-      const cookies = cookie.parse(req.headers.cookie)
-      const authToken = cookies[authCookieName]
-      decoded = jwt.verify(authToken, process.env.SSO_JWT_SECRET)
-    } catch (err) {
-      // eslint-disable-next-line
-      console.error(err)
-
-      return { User: {} }
-    }
-
-    // TODO: create the user entry within our service database
-    // const user = User.findOrCreateFromJWT(decoded);
-    // User.findByExternalId(decoded.external_id)
-    // const user = User.create({external_id, ...rest })
-
-    return { User: decoded }
-  }
+  context: setContext
 })
 
 server.listen().then(({ url }) => {

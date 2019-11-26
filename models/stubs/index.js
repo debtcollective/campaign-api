@@ -3,6 +3,7 @@ const faker = require('faker')
 module.exports = {
   createUser: fixedData => ({
     email: faker.internet.email(),
+    external_id: faker.random.number(),
     ...fixedData
   }),
   createCampaign: fixedData => ({
