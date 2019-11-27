@@ -6,6 +6,12 @@ const { setContext } = require('./context')
 
 const queryResolvers = {
   /**
+   * Retieve the campaign scoped for further requests
+   */
+  currentCampaign: async (root, args, context) => {
+    return context.Campaign
+  },
+  /**
    * Retrive user using Cookies
    */
   currentUser: async (root, args, context) => {
@@ -13,11 +19,7 @@ const queryResolvers = {
       throw new AuthenticationError('No user logged in')
     }
 
-    return {
-      ...context.User,
-      // TODO: this id should be related the id generated after create the user using the auth token
-      id: 2
-    }
+    return context.User
   },
   /**
    * Retrieve all the campaigns alongside its actions
@@ -75,6 +77,25 @@ const mutationResolvers = {
     )
 
     return userAction
+  },
+  addUserToCampaign: async (root, { motive }, context) => {
+    const { id } = context.User
+    const campaign = context.Campaign
+    // NOTE: we need to fetch the user again cause context doesn't have the full tree
+    const user = await User.query()
+      .findById(id)
+      .joinEager('campaigns')
+
+    if (user.campaigns && user.campaigns.length) {
+      return { ok: false }
+    }
+
+    await user.$relatedQuery('campaigns').relate({
+      ...campaign,
+      data: { motive }
+    })
+
+    return { ok: true }
   }
 }
 

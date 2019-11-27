@@ -20,7 +20,7 @@ afterAll(async () => {
   await Campaign.query().delete()
 })
 
-describe('model structure', () => {
+describe.skip('model structure', () => {
   it('allows to insert actions into campaigns', async () => {
     const campaign = await Campaign.query().insert(createCampaign())
     const actions = await campaign
@@ -40,12 +40,10 @@ describe('model structure', () => {
     const createdUser = await User.query()
       .findById(user.id)
       .joinEager('campaigns')
-    const createdCampaign = await Campaign.query().findById(campaign.id)
 
-    expect(createdUser.id).toBeTruthy()
-    expect(createdCampaign.id).toBeTruthy()
-    expect(campaign.id).toBeTruthy()
-    expect(createdUser.campaigns).toEqual([createdCampaign])
+    expect(createdUser.campaigns).toEqual(
+      expect.arrayContaining([expect.objectContaining(campaign)])
+    )
   })
 
   it('allows to query actions by user', async () => {

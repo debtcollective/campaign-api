@@ -3,6 +3,17 @@ const { gql } = require('apollo-server')
 const typeDefs = gql`
   scalar JSONObject
 
+  type UserCampaign {
+    # identifier of the relation
+    id: ID!
+    # identifier of user
+    user_id: ID!
+    # identifier of campaign
+    campaign_id: ID!
+    # metadata for the relation (such as motive)
+    data: JSONObject
+  }
+
   type User {
     id: ID
     email: String
@@ -10,6 +21,7 @@ const typeDefs = gql`
     name: String
     avatar_url: String
     external_id: ID
+    campaigns: [UserCampaign]
   }
 
   type Action {
@@ -48,15 +60,21 @@ const typeDefs = gql`
     action: Action
   }
 
+  type Ok {
+    ok: Boolean!
+  }
+
   type Query {
+    currentCampaign: Campaign!
     currentUser: User!
     campaigns: [Campaign]
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]
-    userActions(userId: ID!, campaignId: ID!): [UserAction]
+    userActions(userId: ID!, campaignId: ID): [UserAction]
   }
 
   type Mutation {
     userActionUpdate(userActionId: ID!, completed: Boolean): UserAction!
+    addUserToCampaign(motive: String!): Ok!
   }
 `
 

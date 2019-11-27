@@ -69,7 +69,7 @@ afterAll(async () => {
   await UserAction.query().delete()
 })
 
-describe('Query resolvers', () => {
+describe.skip('Query resolvers', () => {
   it('returns all campaigns with #campaigns method', async () => {
     const campaigns = await queryResolvers.campaigns()
     const campaignIds = _.map(campaigns, 'id').sort()
@@ -136,7 +136,7 @@ describe('Query resolvers', () => {
   })
 })
 
-describe('Mutation resolvers', () => {
+describe.skip('Mutation resolvers', () => {
   it('allows to update the completed value with #userActionUpdate', async () => {
     const actionId = stubs.campaigns[0].actions[1].id
     const campaignId = stubs.campaigns[0].id
