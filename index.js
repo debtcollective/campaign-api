@@ -47,7 +47,6 @@ const resolvers = {
         .findById(user.id)
         .joinEager('campaigns')
 
-      console.log('campaigns resolver', result, user)
       if (result) {
         return result.campaigns
       }
