@@ -21,11 +21,7 @@ const queryResolvers = {
       throw new AuthenticationError('No user logged in')
     }
 
-    return {
-      ...context.User,
-      // TODO: this id should be related the id generated after create the user using the auth token
-      id: 2
-    }
+    return context.User
   },
   /**
    * Retrieve all the campaigns alongside its actions
