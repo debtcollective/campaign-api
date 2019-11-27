@@ -13,6 +13,7 @@ require('./lib/objection')
  * GraphQL related code
  */
 const { Action } = require('./models/Action')
+const { User } = require('./models/User')
 const { ApolloServer } = require('apollo-server')
 const { GraphQLJSONObject } = require('graphql-type-json')
 const { queryResolvers, mutationResolvers, setContext } = require('./resolvers')
@@ -37,6 +38,21 @@ const resolvers = {
       const { actionId } = userAction
       const result = await Action.query().findById(actionId)
       return result
+    }
+  },
+  // Allow to append campaigns data into User request
+  User: {
+    campaigns: async user => {
+      const result = await User.query()
+        .findById(user.id)
+        .joinEager('campaigns')
+
+      console.log('campaigns resolver', result, user)
+      if (result) {
+        return result.campaigns
+      }
+
+      return []
     }
   }
 }
