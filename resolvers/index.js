@@ -85,8 +85,16 @@ const mutationResolvers = {
     return userAction
   },
   addUserToCampaign: async (root, { motive }, context) => {
-    const user = context.User
+    const { id } = context.User
     const campaign = context.Campaign
+    // NOTE: we need to fetch the user again cause context doesn't have the full tree
+    const user = await User.query()
+      .findById(id)
+      .joinEager('campaigns')
+
+    if (user.campaigns.length) {
+      return { ok: false }
+    }
 
     await user.$relatedQuery('campaigns').relate({
       ...campaign,
