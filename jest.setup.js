@@ -13,6 +13,5 @@ process.env = {
   DISCOURSE_LOGIN_URL: 'http://lvh.me:3000/session/sso_cookies',
   DISCOURSE_SIGNUP_URL: 'http://lvh.me:3000/session/sso_cookies/signup',
   INTROSPECTION: true,
-  PLAYGROUND: true,
-  REQUEST_DATA_HEADER: 'debtcollective-data'
+  PLAYGROUND: true
 }
