@@ -95,23 +95,3 @@ test('retrieves previously created user if present', async () => {
 
   expect(afterAmountUsers - prevAmountUsers).toBe(1)
 })
-
-test('attach newly created user to a campaign with a motive', async () => {
-  const motive = 'third-supporter'
-  const req = {
-    headers: {
-      cookie: fakeCookie,
-      'debtcollective-data': motive
-    }
-  }
-
-  const context = await setContext({ req })
-
-  expect(context.UserCampaign).toEqual(
-    expect.objectContaining({
-      name: campaignData.name,
-      slug: campaignData.slug
-    })
-  )
-  expect(context.UserCampaign.data.motive).toEqual(motive)
-})
