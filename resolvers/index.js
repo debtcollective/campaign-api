@@ -9,9 +9,7 @@ const queryResolvers = {
    * Retieve the campaign scoped for further requests
    */
   currentCampaign: async (root, args, context) => {
-    return {
-      ...context.UserCampaign
-    }
+    return context.Campaign
   },
   /**
    * Retrive user using Cookies
