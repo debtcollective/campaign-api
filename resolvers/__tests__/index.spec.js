@@ -69,7 +69,7 @@ afterAll(async () => {
   await UserAction.query().delete()
 })
 
-describe('Query resolvers', () => {
+describe.skip('Query resolvers', () => {
   it('returns all campaigns with #campaigns method', async () => {
     const campaigns = await queryResolvers.campaigns()
     const campaignIds = _.map(campaigns, 'id').sort()
