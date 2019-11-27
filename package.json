@@ -19,7 +19,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint '**/*.js' --fix",
-    "test": "jest --coverage",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --coverage"
   },
