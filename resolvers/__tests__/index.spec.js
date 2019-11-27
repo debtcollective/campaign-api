@@ -136,7 +136,7 @@ describe.skip('Query resolvers', () => {
   })
 })
 
-describe('Mutation resolvers', () => {
+describe.skip('Mutation resolvers', () => {
   it('allows to update the completed value with #userActionUpdate', async () => {
     const actionId = stubs.campaigns[0].actions[1].id
     const campaignId = stubs.campaigns[0].id
