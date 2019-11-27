@@ -86,7 +86,7 @@ const mutationResolvers = {
       .findById(id)
       .joinEager('campaigns')
 
-    if (user.campaigns.length) {
+    if (user.campaigns && user.campaigns.length) {
       return { ok: false }
     }
 
