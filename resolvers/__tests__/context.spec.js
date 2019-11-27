@@ -5,6 +5,7 @@ const { Campaign } = require('../../models/Campaign')
 const { createCampaign } = require('../../models/stubs')
 
 const campaignData = createCampaign()
+let campaign
 
 afterEach(() => {
   jest.clearAllMocks()
@@ -15,7 +16,7 @@ beforeEach(async () => {
   await Campaign.query().delete()
 
   // We need to ensure the unique campaign is present
-  await Campaign.query().insert(campaignData)
+  campaign = await Campaign.query().insert(campaignData)
 })
 
 afterAll(async () => {
@@ -42,7 +43,8 @@ test('returns an object with empty user when no auth cookie found', async () => 
 
   const context = await setContext({ req })
 
-  expect(context).toEqual(expect.objectContaining({ User: {} }))
+  expect(context.User).toBeNull()
+  expect(context.Campaign.id).toEqual(campaign.id)
 })
 
 test('returns an object with user when auth cookie is found', async () => {

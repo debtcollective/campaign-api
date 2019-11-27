@@ -4,7 +4,7 @@ const { User } = require('../models/User')
 const { Campaign } = require('../models/Campaign')
 
 const setContext = async ({ req }) => {
-  let user
+  let user = null
 
   try {
     const authCookieName = process.env.SSO_COOKIE_NAME
@@ -20,7 +20,7 @@ const setContext = async ({ req }) => {
 
   const campaign = await Campaign.query().first()
 
-  return { user, campaign }
+  return { User: user, Campaign: campaign }
 }
 
 module.exports = {

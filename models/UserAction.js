@@ -1,6 +1,6 @@
-const BaseModel = require('./BaseModel')
+const Model = require('./BaseModel')
 
-class UserAction extends BaseModel {
+class UserAction extends Model {
   static get tableName () {
     return 'userActions'
   }
@@ -22,7 +22,7 @@ class UserAction extends BaseModel {
   static get relationMappings () {
     return {
       user: {
-        relation: BaseModel.BelongsToOneRelation,
+        relation: Model.BelongsToOneRelation,
         modelClass: `${__dirname}/User`,
         join: {
           from: 'userActions.userId',
@@ -33,4 +33,4 @@ class UserAction extends BaseModel {
   }
 }
 
-module.exports = UserAction
+module.exports = { UserAction }

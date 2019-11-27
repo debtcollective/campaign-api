@@ -1,4 +1,4 @@
-const Model = require('../lib/objection')
+const Model = require('./BaseModel')
 const _ = require('lodash')
 
 class User extends Model {
@@ -31,11 +31,11 @@ class User extends Model {
   static get jsonSchema () {
     return {
       type: 'object',
-      required: ['email', 'externalId'],
+      required: ['email', 'external_id'],
 
       properties: {
         id: { type: 'integer' },
-        externalId: { type: 'integer' },
+        external_id: { type: 'integer' },
         username: { type: 'string', minLength: 1, maxLength: 255 },
         email: { type: 'string', minLength: 1, maxLength: 255 },
         avatar_url: { type: 'string', minLength: 1, maxLength: 255 }

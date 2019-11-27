@@ -1,7 +1,7 @@
 const _ = require('lodash')
 const yup = require('yup')
 const { Action } = require('../models/Action')
-const UserAction = require('../models/UserAction')
+const { UserAction } = require('../models/UserAction')
 
 // Same validations we use in the client
 // We should move these to a shared package later
@@ -85,7 +85,9 @@ const Mutation = {
             return { field: err.path, message: err.message }
           })
         })
-    } catch (e) {}
+    } catch (e) {
+      console.error(e)
+    }
 
     if (!_.isEmpty(errors)) {
       return {

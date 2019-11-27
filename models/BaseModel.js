@@ -2,11 +2,13 @@ const Model = require('../lib/objection')
 
 class BaseModel extends Model {
   $beforeInsert () {
-    this.createdAt = new Date().toISOString()
+    const date = new Date()
+    this.createdAt = date
+    this.updatedAt = date
   }
 
   $beforeUpdate () {
-    this.updatedAt = new Date().toISOString()
+    this.updatedAt = new Date()
   }
 }
 

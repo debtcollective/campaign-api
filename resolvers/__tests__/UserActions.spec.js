@@ -3,7 +3,7 @@ require('../../lib/objection')
 const { Action } = require('../../models/Action')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
-const UserAction = require('../../models/UserAction')
+const { UserAction } = require('../../models/UserAction')
 const { Mutation } = require('../UserActions')
 
 describe('UserActions resolvers', () => {
@@ -17,7 +17,7 @@ describe('UserActions resolvers', () => {
       await UserAction.query().delete()
       await Campaign.query().delete()
 
-      // create test data
+      // create test campaign
       campaign = await Campaign.query().insert({
         slug: 'end-student-debt',
         name: 'End Student Debt'
@@ -33,7 +33,7 @@ describe('UserActions resolvers', () => {
 
       user = await User.query().insert({
         email: 'orlando@debtcollective.org',
-        externalId: 1
+        external_id: 1
       })
     })
 
