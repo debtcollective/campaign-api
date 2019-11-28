@@ -1,4 +1,4 @@
-const Model = require('../lib/objection')
+const Model = require('./BaseModel')
 
 class Action extends Model {
   static get tableName () {

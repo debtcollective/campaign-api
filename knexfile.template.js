@@ -9,7 +9,7 @@ module.exports = {
       `campaign_api_${process.env.NODE_ENV || 'development'}`
   },
   pool: {
-    min: process.env.DB_POOL_MIN || 2,
+    min: process.env.DB_POOL_MIN || 0,
     max: process.env.DB_POOL_MAX || 10
   },
   migrations: {

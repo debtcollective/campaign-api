@@ -1,7 +1,9 @@
 const { AuthenticationError } = require('apollo-server')
+const _ = require('lodash')
 const { Campaign } = require('../models/Campaign')
 const { User } = require('../models/User')
 const { UserAction } = require('../models/UserAction')
+const UserActions = require('../resolvers/UserActions')
 const { setContext } = require('./context')
 
 const queryResolvers = {
@@ -99,8 +101,11 @@ const mutationResolvers = {
   }
 }
 
+const allQueryResolvers = _.merge(queryResolvers, UserActions.Query)
+const allMutationResolvers = _.merge(mutationResolvers, UserActions.Mutation)
+
 module.exports = {
   setContext,
-  queryResolvers,
-  mutationResolvers
+  queryResolvers: allQueryResolvers,
+  mutationResolvers: allMutationResolvers
 }

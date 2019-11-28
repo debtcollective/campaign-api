@@ -1,6 +1,6 @@
 exports.up = function (knex, Promise) {
   return knex.schema.table('users', function (t) {
-    t.integer('external_id')
+    t.integer('external_id').unique()
     t.string('username')
     t.string('avatar_url')
   })

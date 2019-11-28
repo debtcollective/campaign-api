@@ -75,6 +75,12 @@ const typeDefs = gql`
   type Mutation {
     userActionUpdate(userActionId: ID!, completed: Boolean): UserAction!
     addUserToCampaign(motive: String!): Ok!
+    createDataDuesAction(data: JSONObject): CreateDataDuesActionPayload!
+  }
+
+  type CreateDataDuesActionPayload {
+    errors: JSONObject
+    userAction: UserAction
   }
 `
 

@@ -1,9 +1,10 @@
-require('../../lib/objection')
-
+const Model = require('../../lib/objection')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
 const { mutationResolvers } = require('../')
 const { createCampaign, createUser } = require('../../models/stubs')
+
+afterAll(() => Model.knex().destroy())
 
 beforeAll(async () => {
   await User.query().delete()

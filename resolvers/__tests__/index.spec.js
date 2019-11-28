@@ -1,4 +1,4 @@
-require('../../lib/objection')
+const Model = require('../../lib/objection')
 const faker = require('faker')
 const { AuthenticationError } = require('apollo-server')
 
@@ -67,6 +67,7 @@ afterAll(async () => {
   await Action.query().delete()
   await Campaign.query().delete()
   await UserAction.query().delete()
+  Model.knex().destroy()
 })
 
 describe.skip('Query resolvers', () => {

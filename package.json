@@ -36,7 +36,8 @@
     "knex": "^0.19.5",
     "lodash": "4.17.15",
     "objection": "^1.6.11",
-    "pg": "^7.12.1"
+    "pg": "^7.12.1",
+    "yup": "0.27.0"
   },
   "devDependencies": {
     "@semantic-release/commit-analyzer": "6.3.3",

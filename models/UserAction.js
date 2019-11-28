@@ -1,4 +1,4 @@
-const Model = require('../lib/objection')
+const Model = require('./BaseModel')
 
 class UserAction extends Model {
   static get tableName () {
@@ -8,7 +8,7 @@ class UserAction extends Model {
   static get jsonSchema () {
     return {
       type: 'object',
-      required: ['actionId', 'userId', 'campaignId'],
+      required: ['actionId', 'campaignId'],
 
       properties: {
         id: { type: 'integer' },
@@ -33,6 +33,4 @@ class UserAction extends Model {
   }
 }
 
-module.exports = {
-  UserAction
-}
+module.exports = { UserAction }

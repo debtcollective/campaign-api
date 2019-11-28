@@ -1,6 +1,5 @@
 // Init Ojbection
-require('../../lib/objection')
-
+const Model = require('../../lib/objection')
 const { Action } = require('../../models/Action')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
@@ -18,6 +17,7 @@ afterAll(async () => {
   await User.query().delete()
   await Action.query().delete()
   await Campaign.query().delete()
+  Model.knex().destroy()
 })
 
 describe.skip('model structure', () => {

@@ -1,4 +1,4 @@
-const Model = require('../lib/objection')
+const Model = require('./BaseModel')
 const _ = require('lodash')
 
 class User extends Model {

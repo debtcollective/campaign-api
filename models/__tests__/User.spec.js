@@ -1,3 +1,4 @@
+const Model = require('../../lib/objection')
 const { User } = require('../../models/User')
 
 const userData = {
@@ -28,6 +29,7 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await User.query().delete()
+  Model.knex().destroy()
 })
 
 describe('#findOrCreateFromSSO', () => {
