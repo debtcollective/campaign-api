@@ -181,11 +181,12 @@ jobs:
             docker push debtcollective/campaign-api:$CIRCLE_TAG
 
   deploy_stage:
+    working_directory: ~/app
     docker:
       - image: circleci/node:12.10.0
-    environment:
-      ECS_CLUSTER: stage
-      ECS_SERVICE: campaign_api
+        environment:
+          ECS_CLUSTER: stage
+          ECS_SERVICE: campaign_api
     steps:
       - checkout
       - aws-cli/install
