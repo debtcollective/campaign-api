@@ -1,5 +1,4 @@
-require('../../lib/objection')
-
+const Model = require('../../lib/objection')
 const { Action } = require('../../models/Action')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
@@ -12,6 +11,8 @@ describe('UserActions resolvers', () => {
     let campaign
     let context
     let action
+
+    afterAll(() => Model.knex().destroy())
 
     beforeEach(async () => {
       await User.query().delete()

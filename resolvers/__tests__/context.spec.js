@@ -1,3 +1,4 @@
+const Model = require('../../lib/objection')
 const { setContext } = require('../context')
 const { fakeCookie } = require('../stubs')
 const { User } = require('../../models/User')
@@ -22,6 +23,7 @@ beforeEach(async () => {
 afterAll(async () => {
   await User.query().delete()
   await Campaign.query().delete()
+  Model.knex().destroy()
 })
 
 const getAllUsersCount = async () => {
