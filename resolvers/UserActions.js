@@ -100,7 +100,7 @@ const Mutation = {
         return { userAction }
       })
       .catch(validationErrors => {
-        const errors = validationErrors.inner.map(err => {
+        const errors = (validationErrors.inner || []).map(err => {
           return { field: err.path, message: err.message }
         })
 
