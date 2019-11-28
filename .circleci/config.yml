@@ -24,7 +24,7 @@ jobs:
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: campaign_api_test
-          POSTGRES_PASSWORD: ""
+          POSTGRES_PASSWORD: ''
     steps:
       - checkout
 
@@ -101,7 +101,7 @@ jobs:
       # debt-bot ssh key
       - add_ssh_keys:
           fingerprints:
-            - "90:19:0a:60:b7:db:f6:43:89:09:32:c2:95:c6:67:7f"
+            - '90:19:0a:60:b7:db:f6:43:89:09:32:c2:95:c6:67:7f'
 
       - run:
           name: configure git
@@ -181,7 +181,8 @@ jobs:
             docker push debtcollective/campaign-api:$CIRCLE_TAG
 
   deploy_stage:
-    executor: docker-publisher
+    docker:
+      - image: circleci/node:12.10.0
     environment:
       ECS_CLUSTER: stage
       ECS_SERVICE: campaign_api
