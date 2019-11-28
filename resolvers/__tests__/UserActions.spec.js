@@ -15,9 +15,9 @@ describe('UserActions resolvers', () => {
     afterAll(() => Model.knex().destroy())
 
     beforeEach(async () => {
-      await User.query().delete()
-      await Action.query().delete()
       await UserAction.query().delete()
+      await Action.query().delete()
+      await User.query().delete()
       await Campaign.query().delete()
 
       // create test campaign
@@ -116,6 +116,14 @@ describe('UserActions resolvers', () => {
     describe('with existing record', () => {
       it('returns existing record', async () => {
         // insert record
+        await UserAction.query().insert({
+          userId: user.id,
+          campaignId: campaign.id,
+          actionId: action.id,
+          completed: true,
+          data: { fullName: 'Orlando Del Aguila' }
+        })
+
         const data = {
           debts: [
             {
@@ -131,14 +139,6 @@ describe('UserActions resolvers', () => {
           fullName: 'Betsy DeVos',
           phoneNumber: '(202) 401-3000'
         }
-
-        await UserAction.query().insert({
-          userId: user.id,
-          campaignId: campaign.id,
-          actionId: action.id,
-          completed: true,
-          data: { fullName: 'Orlando Del Aguila' }
-        })
 
         const payload = await Mutation.createDataDuesAction(
           null,

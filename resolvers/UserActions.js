@@ -1,6 +1,5 @@
 const yup = require('yup')
 const { Action } = require('../models/Action')
-const { UserAction } = require('../models/UserAction')
 
 // Same validations we use in the client
 // We should move these to a shared package later
@@ -89,8 +88,7 @@ const Mutation = {
     return validationSchema
       .validate(data, { abortEarly: false, stripUnknown: true })
       .then(async results => {
-        const userAction = await UserAction.query().insert({
-          userId: user.id,
+        const userAction = await user.$relatedQuery('userActions').insert({
           actionId: action.id,
           campaignId: campaign.id,
           completed: true,
@@ -100,7 +98,7 @@ const Mutation = {
         return { userAction }
       })
       .catch(validationErrors => {
-        const errors = (validationErrors.inner || []).map(err => {
+        const errors = validationErrors.inner.map(err => {
           return { field: err.path, message: err.message }
         })
 
