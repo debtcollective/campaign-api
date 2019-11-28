@@ -195,7 +195,7 @@ jobs:
       - run:
           name: Migrate database
           command: |
-            node scripts/ecs_db_migrate.rb
+            node scripts/ecs_db_migrate.js
 
       - run:
           name: Deploy new task in ECS
