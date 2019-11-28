@@ -11,6 +11,7 @@ describe('UserActions resolvers', () => {
     let user
     let campaign
     let context
+    let action
 
     beforeEach(async () => {
       await User.query().delete()
@@ -24,7 +25,7 @@ describe('UserActions resolvers', () => {
         name: 'End Student Debt'
       })
 
-      await Action.query().insert({
+      action = await Action.query().insert({
         campaignId: campaign.id,
         title: 'Data Dues',
         description:
@@ -108,6 +109,48 @@ describe('UserActions resolvers', () => {
             message: 'You need to answer this question'
           }
         ])
+      })
+    })
+
+    describe('with existing record', () => {
+      it('returns existing record', async () => {
+        // insert record
+        const data = {
+          debts: [
+            {
+              accountStatus: 'Late on payments',
+              amount: 5000,
+              beingHarrased: '',
+              creditor: '',
+              debtType: '',
+              interestRate: 4.53
+            }
+          ],
+          email: 'betsy.devos@ed.gov',
+          fullName: 'Betsy DeVos',
+          phoneNumber: '(202) 401-3000'
+        }
+
+        await UserAction.query().insert({
+          userId: user.id,
+          campaignId: campaign.id,
+          actionId: action.id,
+          completed: true,
+          data: { fullName: 'Orlando Del Aguila' }
+        })
+
+        const payload = await Mutation.createDataDuesAction(
+          null,
+          { data },
+          context
+        )
+
+        expect(payload).not.toBeNull()
+        expect(payload.userAction).not.toBeNull()
+        expect(payload.errors).toBeUndefined()
+        expect(payload.userAction.data).toEqual({
+          fullName: 'Orlando Del Aguila'
+        })
       })
     })
   })

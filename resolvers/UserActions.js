@@ -75,6 +75,17 @@ const Mutation = {
       type: 'data-dues'
     })
 
+    // fetch if there's a data dues action already
+    // just return it for now, later we will need to update it
+    const [userAction] = await user.$relatedQuery('userActions').where({
+      campaignId: campaign.id,
+      actionId: action.id
+    })
+
+    if (userAction) {
+      return { userAction }
+    }
+
     return validationSchema
       .validate(data, { abortEarly: false, stripUnknown: true })
       .then(async results => {
