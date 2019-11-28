@@ -10,6 +10,7 @@ describe('UserActions resolvers', () => {
   describe('createDataDues', () => {
     let user
     let campaign
+    let context
 
     beforeEach(async () => {
       await User.query().delete()
@@ -35,31 +36,79 @@ describe('UserActions resolvers', () => {
         email: 'orlando@debtcollective.org',
         external_id: 1
       })
+
+      context = { User: user, Campaign: campaign }
     })
 
-    it('creates userAction if data is valid', async () => {
-      const data = {
-        'debts[0].accountStatus': 'Late on payments',
-        'debts[0].amount': '5000',
-        'debts[0].beingHarrased': 'false',
-        'debts[0].creditor': 'Sallie Mae',
-        'debts[0].debtType': 'Student debt',
-        'debts[0].interestRate': '4.53',
-        'debts[0].studentDebtType': 'Subsidized Stafford',
-        email: 'betsy.devos@ed.gov',
-        fullName: 'Betsy DeVos',
-        phoneNumber: '(202) 401-3000'
-      }
+    describe('with valid data', () => {
+      it('creates userAction and returns it', async () => {
+        const data = {
+          debts: [
+            {
+              accountStatus: 'Late on payments',
+              amount: 5000,
+              beingHarrased: 'false',
+              creditor: 'Sallie Mae',
+              debtType: 'Student debt',
+              interestRate: 4.53,
+              studentDebtType: 'Subsidized Stafford'
+            }
+          ],
+          email: 'betsy.devos@ed.gov',
+          fullName: 'Betsy DeVos',
+          phoneNumber: '(202) 401-3000'
+        }
 
-      const payload = await Mutation.createDataDuesAction(
-        null,
-        { data },
-        { campaign, user }
-      )
+        const payload = await Mutation.createDataDuesAction(
+          null,
+          { data },
+          context
+        )
 
-      expect(payload).not.toBeNull()
-      expect(payload.userAction).not.toBeNull()
-      expect(payload.userAction.completed).toEqual(true)
+        expect(payload).not.toBeNull()
+        expect(payload.userAction).not.toBeNull()
+        expect(payload.errors).toBeUndefined()
+        expect(payload.userAction.completed).toEqual(true)
+      })
+    })
+
+    describe('with invalid data', () => {
+      it('returns errors', async () => {
+        // beingHarrased, creditor and debtType are required
+        const data = {
+          debts: [
+            {
+              accountStatus: 'Late on payments',
+              amount: 5000,
+              beingHarrased: '',
+              creditor: '',
+              debtType: '',
+              interestRate: 4.53
+            }
+          ],
+          email: 'betsy.devos@ed.gov',
+          fullName: 'Betsy DeVos',
+          phoneNumber: '(202) 401-3000'
+        }
+
+        const payload = await Mutation.createDataDuesAction(
+          null,
+          { data },
+          context
+        )
+
+        expect(payload).not.toBeNull()
+        expect(payload.userAction).toBeUndefined()
+        expect(payload.errors).not.toBeNull()
+        expect(payload.errors).toEqual([
+          { field: 'debts[0].debtType', message: 'Debt type is required' },
+          { field: 'debts[0].creditor', message: 'Creditor is required' },
+          {
+            field: 'debts[0].beingHarrased',
+            message: 'You need to answer this question'
+          }
+        ])
+      })
     })
   })
 })

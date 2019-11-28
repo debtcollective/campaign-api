@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const yup = require('yup')
 const { Action } = require('../models/Action')
 const { UserAction } = require('../models/UserAction')
@@ -68,8 +67,7 @@ const Mutation = {
   createDataDuesAction: async (parent, args, context) => {
     // get data from args
     const { data } = args
-    const { user, campaign } = context
-    let errors
+    const { User: user, Campaign: campaign } = context
 
     // find data dues action for current campaign
     const [action] = await Action.query().where({
@@ -77,35 +75,26 @@ const Mutation = {
       type: 'data-dues'
     })
 
-    try {
-      await validationSchema
-        .validate(data, { abortEarly: false })
-        .catch(validationErrors => {
-          errors = validationErrors.inner.map(err => {
-            return { field: err.path, message: err.message }
-          })
+    return validationSchema
+      .validate(data, { abortEarly: false, stripUnknown: true })
+      .then(async results => {
+        const userAction = await UserAction.query().insert({
+          userId: user.id,
+          actionId: action.id,
+          campaignId: campaign.id,
+          completed: true,
+          data: results
         })
-    } catch (e) {
-      console.error(e)
-    }
 
-    if (!_.isEmpty(errors)) {
-      return {
-        errors
-      }
-    }
+        return { userAction }
+      })
+      .catch(validationErrors => {
+        const errors = validationErrors.inner.map(err => {
+          return { field: err.path, message: err.message }
+        })
 
-    const userAction = await UserAction.query().insert({
-      userId: user.id,
-      actionId: action.id,
-      campaignId: campaign.id,
-      completed: true,
-      data: data
-    })
-
-    return {
-      userAction
-    }
+        return { errors }
+      })
   }
 }
 
