@@ -74,6 +74,7 @@ const Query = {
       .where('campaignId', context.Campaign.id)
     const userActions = userQuery ? userQuery.userActions : []
 
+    // TODO: we need to address issue #20
     const result = actions.map(action => {
       const userActionByActionId = _.defaultTo(
         _.find(userActions, {
