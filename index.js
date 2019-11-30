@@ -18,6 +18,7 @@ const { ApolloServer } = require('apollo-server')
 const { GraphQLJSONObject } = require('graphql-type-json')
 const { queryResolvers, mutationResolvers, setContext } = require('./resolvers')
 const typeDefs = require('./schema')
+const Sentry = require('@sentry/node')
 
 const resolvers = {
   /**
@@ -55,6 +56,11 @@ const resolvers = {
     }
   }
 }
+
+// Init Sentry
+Sentry.init({
+  dsn: process.env.SENTRY_DSN
+})
 
 const corsOptions = {
   origin: process.env.CORS_ORIGIN,
