@@ -242,4 +242,22 @@ describe('getUserActions query', () => {
 
     expect(result[0].completed).toBeTruthy()
   })
+
+  it('returns a reference to the userActionId and actionId', async () => {
+    const context = { User: stubs.currentUser, Campaign: stubs.currentCampaign }
+    const userId = stubs.currentUser.id
+    const firstAction = await Action.query().first()
+
+    // create a UserAction using `actions[0].id`
+    const userAction = await UserAction.query().insert({
+      actionId: stubs.actions[0].id,
+      campaignId: stubs.currentCampaign.id,
+      userId: stubs.currentUser.id
+    })
+
+    const result = await Query.getUserActions(null, { userId }, context)
+
+    expect(result[0].userActionId).toEqual(userAction.id)
+    expect(result[0].actionId).toEqual(firstAction.id)
+  })
 })

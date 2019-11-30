@@ -72,20 +72,23 @@ const Query = {
       .findById(userId)
       .joinEager('userActions')
       .where('campaignId', context.Campaign.id)
-
-    if (!userQuery) {
-      return actions
-    }
+    const userActions = userQuery ? userQuery.userActions : []
 
     const result = actions.map(action => {
       const userActionByActionId = _.defaultTo(
-        _.find(userQuery.userActions, {
+        _.find(userActions, {
           actionId: action.id
         }),
         { completed: false }
       )
+      const actionData = _.omit(action, ['id'])
 
-      return { ...action, completed: userActionByActionId.completed }
+      return {
+        ...actionData,
+        actionId: action.id,
+        userActionId: userActionByActionId.id,
+        completed: userActionByActionId.completed
+      }
     })
 
     return result

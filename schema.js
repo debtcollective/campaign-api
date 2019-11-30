@@ -69,7 +69,18 @@ const typeDefs = gql`
     currentUser: User!
     campaigns: [Campaign]
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]
-    getUserActions(userId: ID!): [UserAction]
+    getUserActions(userId: ID!): [GetUserActionsPayload]
+  }
+
+  type GetUserActionsPayload {
+    actionId: ID!
+    userActionId: ID
+    campaignId: ID!
+    title: String
+    description: String
+    type: String!
+    config: JSONObject
+    completed: Boolean!
   }
 
   type Mutation {
