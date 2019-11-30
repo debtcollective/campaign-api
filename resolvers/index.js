@@ -5,6 +5,7 @@ const { User } = require('../models/User')
 const { UserAction } = require('../models/UserAction')
 const UserActions = require('../resolvers/UserActions')
 const { setContext } = require('./context')
+const sentryWrapper = require('../lib/sentryWrapper')
 
 const queryResolvers = {
   /**
@@ -104,8 +105,11 @@ const mutationResolvers = {
 const allQueryResolvers = _.merge(queryResolvers, UserActions.Query)
 const allMutationResolvers = _.merge(mutationResolvers, UserActions.Mutation)
 
+const allQueryResolversWrapped = sentryWrapper(allQueryResolvers)
+const allMutationResolversWrapped = sentryWrapper(allMutationResolvers)
+
 module.exports = {
   setContext,
-  queryResolvers: allQueryResolvers,
-  mutationResolvers: allMutationResolvers
+  queryResolvers: allQueryResolversWrapped,
+  mutationResolvers: allMutationResolversWrapped
 }
