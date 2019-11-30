@@ -1,5 +1,8 @@
 const yup = require('yup')
 const { Action } = require('../models/Action')
+const { User } = require('../models/User')
+const { Campaign } = require('../models/Campaign')
+const _ = require('lodash')
 
 // Same validations we use in the client
 // We should move these to a shared package later
@@ -60,7 +63,34 @@ const validationSchema = yup.object().shape({
   )
 })
 
-const Query = {}
+const Query = {
+  getUserActions: async (root, { userId }, context) => {
+    const { actions } = await Campaign.query()
+      .findById(context.Campaign.id)
+      .joinEager('actions')
+    const userQuery = await User.query()
+      .findById(userId)
+      .joinEager('userActions')
+      .where('campaignId', context.Campaign.id)
+
+    if (!userQuery) {
+      return actions
+    }
+
+    const result = actions.map(action => {
+      const userActionByActionId = _.defaultTo(
+        _.find(userQuery.userActions, {
+          actionId: action.id
+        }),
+        { completed: false }
+      )
+
+      return { ...action, completed: userActionByActionId.completed }
+    })
+
+    return result
+  }
+}
 
 const Mutation = {
   createDataDuesAction: async (parent, args, context) => {

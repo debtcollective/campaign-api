@@ -69,7 +69,7 @@ const typeDefs = gql`
     currentUser: User!
     campaigns: [Campaign]
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]
-    userActions(userId: ID!, campaignId: ID): [UserAction]
+    getUserActions(userId: ID!): [UserAction]
   }
 
   type Mutation {
