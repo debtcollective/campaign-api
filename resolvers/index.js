@@ -45,25 +45,6 @@ const queryResolvers = {
     const campaignActions = result.campaigns[0].actions
 
     return campaignActions
-  },
-  /**
-   * Retrieve the records of UserActions for a given user and campaign
-   */
-  userActions: async (root, { userId, campaignId }) => {
-    // TODO: avoid the short-circuit and add conditionally "where" filter
-    if (campaignId) {
-      const result = await User.query()
-        .findById(userId)
-        .joinEager('userActions')
-        .where('campaignId', campaignId)
-
-      return result.userActions
-    }
-
-    const result = await User.query()
-      .findById(userId)
-      .joinEager('userActions')
-    return result.userActions
   }
 }
 

@@ -15,6 +15,7 @@
     "db:drop": "node scripts/db/dropdb.js",
     "db:migrate": "knex migrate:latest",
     "db:seed": "knex seed:run",
+    "db:dev:prepare": "cross-env-shell \"yarn db:drop && yarn db:create && yarn db:migrate && yarn db:seed\"",
     "db:test:prepare": "cross-env-shell NODE_ENV=test \"yarn db:drop && yarn db:create && yarn db:migrate\"",
     "start": "node index.js",
     "dev": "nodemon index.js",

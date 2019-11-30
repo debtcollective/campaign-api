@@ -42,6 +42,7 @@ class Action extends Model {
           to: 'users.id'
         }
       }
+      // TODO: we need to address issue #20
     }
   }
 }
