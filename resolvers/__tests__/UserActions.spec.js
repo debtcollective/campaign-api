@@ -157,107 +157,116 @@ describe('UserActions resolvers', () => {
       })
     })
   })
-})
 
-describe('getUserActions query', () => {
-  const stubs = {
-    currentUser: null,
-    currentCampaign: null,
-    actions: []
-  }
+  describe('getUserActions query', () => {
+    const stubs = {
+      currentUser: null,
+      currentCampaign: null,
+      actions: []
+    }
 
-  beforeEach(async () => {
-    // Clean the database
-    await UserAction.query().delete()
-    await Action.query().delete()
-    await User.query().delete()
-    await Campaign.query().delete()
+    beforeEach(async () => {
+      // Clean the database
+      await UserAction.query().delete()
+      await Action.query().delete()
+      await User.query().delete()
+      await Campaign.query().delete()
 
-    // Create a base campaign to work with
-    const campaign = await Campaign.query().insert({
-      slug: 'end-student-debt',
-      name: 'End Student Debt'
+      // Create a base campaign to work with
+      const campaign = await Campaign.query().insert({
+        slug: 'end-student-debt',
+        name: 'End Student Debt'
+      })
+
+      // Create actions
+      const actions = Array(3)
+      actions[0] = await Action.query().insert({
+        title: faker.lorem.words(2),
+        description: faker.lorem.words(10),
+        type: _.sample(['Retweet', 'Link', 'Share']),
+        config: { fake_number: faker.random.number() },
+        campaignId: campaign.id
+      })
+      actions[1] = await Action.query().insert({
+        title: faker.lorem.words(2),
+        description: faker.lorem.words(10),
+        type: _.sample(['Retweet', 'Link', 'Share']),
+        config: { fake_number: faker.random.number() },
+        campaignId: campaign.id
+      })
+      actions[2] = await Action.query().insert({
+        title: faker.lorem.words(2),
+        description: faker.lorem.words(10),
+        type: _.sample(['Retweet', 'Link', 'Share']),
+        config: { fake_number: faker.random.number() },
+        campaignId: campaign.id
+      })
+
+      // Create a user to work with
+      const user = await User.query().insert({
+        email: faker.internet.email(),
+        external_id: faker.random.number(10)
+      })
+
+      stubs.currentCampaign = campaign
+      stubs.currentUser = user
+      stubs.actions = actions
     })
 
-    // Create actions
-    const actions = Array(3)
-    actions[0] = await Action.query().insert({
-      title: faker.lorem.words(2),
-      description: faker.lorem.words(10),
-      type: _.sample(['Retweet', 'Link', 'Share']),
-      config: { fake_number: faker.random.number() }
-    })
-    actions[1] = await Action.query().insert({
-      title: faker.lorem.words(2),
-      description: faker.lorem.words(10),
-      type: _.sample(['Retweet', 'Link', 'Share']),
-      config: { fake_number: faker.random.number() }
-    })
-    actions[2] = await Action.query().insert({
-      title: faker.lorem.words(2),
-      description: faker.lorem.words(10),
-      type: _.sample(['Retweet', 'Link', 'Share']),
-      config: { fake_number: faker.random.number() }
+    it('returns all actions for currentCampaign', async () => {
+      const context = {
+        User: stubs.currentUser,
+        Campaign: stubs.currentCampaign
+      }
+      const userId = stubs.currentUser.id
+
+      const result = await Query.getUserActions(null, { userId }, context)
+
+      result.forEach((item, index) => {
+        expect(item.title).toEqual(stubs.actions[index].title)
+        expect(item.completed).toBeFalsy()
+      })
     })
 
-    // Relate actions to base campaign
-    await campaign.$relatedQuery('actions').relate(actions)
+    it('returns completed status for each action', async () => {
+      const context = {
+        User: stubs.currentUser,
+        Campaign: stubs.currentCampaign
+      }
+      const userId = stubs.currentUser.id
 
-    // Create a user to work with
-    const user = await User.query().insert({
-      email: faker.internet.email(),
-      external_id: faker.random.number(10)
+      // pretend a completed action using `actions[0].id`
+      await UserAction.query().insert({
+        actionId: stubs.actions[0].id,
+        campaignId: stubs.currentCampaign.id,
+        userId: stubs.currentUser.id,
+        completed: true
+      })
+
+      const result = await Query.getUserActions(null, { userId }, context)
+
+      expect(result[0].completed).toBeTruthy()
     })
 
-    stubs.currentCampaign = campaign
-    stubs.currentUser = user
-    stubs.actions = actions
-  })
+    it('returns a reference to the userActionId and actionId', async () => {
+      const context = {
+        User: stubs.currentUser,
+        Campaign: stubs.currentCampaign
+      }
+      const userId = stubs.currentUser.id
+      const firstAction = await Action.query().first()
 
-  it('returns all actions for currentCampaign', async () => {
-    const context = { User: stubs.currentUser, Campaign: stubs.currentCampaign }
-    const userId = stubs.currentUser.id
+      // create a UserAction using `actions[0].id`
+      const userAction = await UserAction.query().insert({
+        actionId: stubs.actions[0].id,
+        campaignId: stubs.currentCampaign.id,
+        userId: stubs.currentUser.id
+      })
 
-    const result = await Query.getUserActions(null, { userId }, context)
+      const result = await Query.getUserActions(null, { userId }, context)
 
-    result.forEach((item, index) => {
-      expect(item.title).toEqual(stubs.actions[index].title)
-      expect(item.completed).toBeFalsy()
+      expect(result[0].userActionId).toEqual(userAction.id)
+      expect(result[0].actionId).toEqual(firstAction.id)
     })
-  })
-
-  it('returns completed status for each action', async () => {
-    const context = { User: stubs.currentUser, Campaign: stubs.currentCampaign }
-    const userId = stubs.currentUser.id
-
-    // pretend a completed action using `actions[0].id`
-    await UserAction.query().insert({
-      actionId: stubs.actions[0].id,
-      campaignId: stubs.currentCampaign.id,
-      userId: stubs.currentUser.id,
-      completed: true
-    })
-
-    const result = await Query.getUserActions(null, { userId }, context)
-
-    expect(result[0].completed).toBeTruthy()
-  })
-
-  it('returns a reference to the userActionId and actionId', async () => {
-    const context = { User: stubs.currentUser, Campaign: stubs.currentCampaign }
-    const userId = stubs.currentUser.id
-    const firstAction = await Action.query().first()
-
-    // create a UserAction using `actions[0].id`
-    const userAction = await UserAction.query().insert({
-      actionId: stubs.actions[0].id,
-      campaignId: stubs.currentCampaign.id,
-      userId: stubs.currentUser.id
-    })
-
-    const result = await Query.getUserActions(null, { userId }, context)
-
-    expect(result[0].userActionId).toEqual(userAction.id)
-    expect(result[0].actionId).toEqual(firstAction.id)
   })
 })

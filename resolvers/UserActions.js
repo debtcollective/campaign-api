@@ -92,7 +92,7 @@ const Query = {
       }
     })
 
-    return result
+    return _.sortBy(result, 'actionId')
   }
 }
 
