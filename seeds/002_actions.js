@@ -3,10 +3,11 @@ exports.seed = function (knex) {
     {
       id: 1,
       campaign_id: 1,
-      title: 'Data Dues',
+      title: 'Add your debt data',
       description:
         'Data dues action where we request user about their debt data',
       type: 'data-dues',
+      slug: 'data-dues',
       config: {}
     }
   ])

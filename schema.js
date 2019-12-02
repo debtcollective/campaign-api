@@ -30,6 +30,8 @@ const typeDefs = gql`
     campaignId: ID!
     "title of the action"
     title: String!
+    "action slug"
+    slug: String!
     "description of the action"
     description: String!
     "define the type of UI to render"
@@ -81,6 +83,7 @@ const typeDefs = gql`
     type: String!
     config: JSONObject
     completed: Boolean!
+    slug: String!
   }
 
   type Mutation {
