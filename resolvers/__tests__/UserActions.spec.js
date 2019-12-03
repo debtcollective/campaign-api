@@ -134,11 +134,12 @@ describe('UserActions resolvers', () => {
             {
               accountStatus: 'Late on payments',
               amount: 5000,
-              beingHarrased: 'false',
+              beingHarrased: 'true',
               creditor: 'Sallie Mae',
               debtType: 'Student debt',
               studentDebtType: 'Parent PLUS',
-              interestRate: '4.53'
+              interestRate: '4.53',
+              harrasmentDescription: "I'm being harrased"
             }
           ],
           streetAddress: '400 Maryland Avenue, SW. Washington, DC 20202',

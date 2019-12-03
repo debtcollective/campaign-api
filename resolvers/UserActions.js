@@ -58,7 +58,11 @@ const validationSchema = yup.object().shape({
       accountStatus: yup
         .mixed()
         .oneOf([...accountStatuses, unknown], 'Account status is required'),
-      beingHarrased: yup.string().required('You need to answer this question')
+      beingHarrased: yup.string().required('You need to answer this question'),
+      harrasmentDescription: yup.string().when('beingHarrased', {
+        is: 'true',
+        then: yup.string().required()
+      })
     })
   )
 })
