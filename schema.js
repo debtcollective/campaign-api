@@ -60,6 +60,8 @@ const typeDefs = gql`
     completed: Boolean!
     "common data related to the action"
     action: Action
+    " JSONB data"
+    data: JSONObject
   }
 
   type Ok {
@@ -72,6 +74,7 @@ const typeDefs = gql`
     campaigns: [Campaign]
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]
     getUserActions(userId: ID!): [GetUserActionsPayload]
+    userAction(slug: String!): UserAction
   }
 
   type GetUserActionsPayload {

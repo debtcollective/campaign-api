@@ -93,6 +93,23 @@ const Query = {
     })
 
     return _.sortBy(result, 'actionId')
+  },
+  userAction: async (root, { slug }, context) => {
+    const { Campaign: campaign, User: user } = context
+
+    const action = await campaign
+      .$relatedQuery('actions')
+      .findOne({ slug, campaignId: campaign.id })
+
+    if (!action) {
+      return
+    }
+
+    const userAction = await user
+      .$relatedQuery('userActions')
+      .findOne({ actionId: action.id })
+
+    return userAction
   }
 }
 
