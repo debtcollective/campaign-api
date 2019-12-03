@@ -92,10 +92,10 @@ const typeDefs = gql`
   type Mutation {
     userActionUpdate(userActionId: ID!, completed: Boolean): UserAction!
     addUserToCampaign(motive: String!): Ok!
-    createDataDuesAction(data: JSONObject): CreateDataDuesActionPayload!
+    upsertDataDuesAction(data: JSONObject): UpsertDataDuesActionPayload!
   }
 
-  type CreateDataDuesActionPayload {
+  type UpsertDataDuesActionPayload {
     errors: JSONObject
     userAction: UserAction
   }

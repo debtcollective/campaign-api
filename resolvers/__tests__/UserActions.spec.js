@@ -10,7 +10,7 @@ const _ = require('lodash')
 afterAll(() => Model.knex().destroy())
 
 describe('UserActions resolvers', () => {
-  describe('createDataDues', () => {
+  describe('upsertDataDuesAction', () => {
     let user
     let campaign
     let context
@@ -54,7 +54,7 @@ describe('UserActions resolvers', () => {
               beingHarrased: 'false',
               creditor: 'Sallie Mae',
               debtType: 'Student debt',
-              interestRate: 4.53,
+              interestRate: '4.53',
               studentDebtType: 'Subsidized Stafford'
             }
           ],
@@ -63,7 +63,7 @@ describe('UserActions resolvers', () => {
           phoneNumber: '(202) 401-3000'
         }
 
-        const payload = await Mutation.createDataDuesAction(
+        const payload = await Mutation.upsertDataDuesAction(
           null,
           { data },
           context
@@ -87,7 +87,7 @@ describe('UserActions resolvers', () => {
               beingHarrased: '',
               creditor: '',
               debtType: '',
-              interestRate: 4.53
+              interestRate: '4.53'
             }
           ],
           email: 'betsy.devos@ed.gov',
@@ -95,7 +95,7 @@ describe('UserActions resolvers', () => {
           phoneNumber: '(202) 401-3000'
         }
 
-        const payload = await Mutation.createDataDuesAction(
+        const payload = await Mutation.upsertDataDuesAction(
           null,
           { data },
           context
@@ -138,7 +138,7 @@ describe('UserActions resolvers', () => {
               creditor: 'Sallie Mae',
               debtType: 'Student debt',
               studentDebtType: 'Parent PLUS',
-              interestRate: 4.53
+              interestRate: '4.53'
             }
           ],
           streetAddress: '400 Maryland Avenue, SW. Washington, DC 20202',
@@ -147,7 +147,7 @@ describe('UserActions resolvers', () => {
           phoneNumber: '(202) 401-3000'
         }
 
-        const payload = await Mutation.createDataDuesAction(
+        const payload = await Mutation.upsertDataDuesAction(
           null,
           { data },
           context
