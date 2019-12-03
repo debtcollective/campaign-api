@@ -83,14 +83,16 @@ const mutationResolvers = {
   }
 }
 
-const allQueryResolvers = _.merge(queryResolvers, UserActions.Query)
-const allMutationResolvers = _.merge(mutationResolvers, UserActions.Mutation)
+let allQueryResolvers = _.merge(queryResolvers, UserActions.Query)
+let allMutationResolvers = _.merge(mutationResolvers, UserActions.Mutation)
 
-const allQueryResolversWrapped = sentryWrapper(allQueryResolvers)
-const allMutationResolversWrapped = sentryWrapper(allMutationResolvers)
+if (process.env.SENTRY_DSN) {
+  allQueryResolvers = sentryWrapper(allQueryResolvers)
+  allMutationResolvers = sentryWrapper(allMutationResolvers)
+}
 
 module.exports = {
   setContext,
-  queryResolvers: allQueryResolversWrapped,
-  mutationResolvers: allMutationResolversWrapped
+  queryResolvers: allQueryResolvers,
+  mutationResolvers: allMutationResolvers
 }
