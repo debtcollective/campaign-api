@@ -116,14 +116,17 @@ describe('UserActions resolvers', () => {
     })
 
     describe('with existing record', () => {
-      it('returns existing record', async () => {
+      it('updates existing record', async () => {
         // insert record
         await UserAction.query().insert({
           userId: user.id,
           campaignId: campaign.id,
           actionId: action.id,
           completed: true,
-          data: { fullName: 'Orlando Del Aguila' }
+          data: {
+            fullName: 'Orlando Del Aguila',
+            email: 'orlando@debtcollective.org'
+          }
         })
 
         const data = {
@@ -131,12 +134,14 @@ describe('UserActions resolvers', () => {
             {
               accountStatus: 'Late on payments',
               amount: 5000,
-              beingHarrased: '',
-              creditor: '',
-              debtType: '',
+              beingHarrased: 'false',
+              creditor: 'Sallie Mae',
+              debtType: 'Student debt',
+              studentDebtType: 'Parent PLUS',
               interestRate: 4.53
             }
           ],
+          streetAddress: '400 Maryland Avenue, SW. Washington, DC 20202',
           email: 'betsy.devos@ed.gov',
           fullName: 'Betsy DeVos',
           phoneNumber: '(202) 401-3000'
@@ -151,9 +156,7 @@ describe('UserActions resolvers', () => {
         expect(payload).not.toBeNull()
         expect(payload.userAction).not.toBeNull()
         expect(payload.errors).toBeUndefined()
-        expect(payload.userAction.data).toEqual({
-          fullName: 'Orlando Del Aguila'
-        })
+        expect(payload.userAction.data).toEqual(data)
       })
     })
   })

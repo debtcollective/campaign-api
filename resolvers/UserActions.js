@@ -53,7 +53,7 @@ const validationSchema = yup.object().shape({
         .mixed()
         .oneOf([...studentDebtTypes, unknown], 'Student debt type is required'),
       amount: yup.number().required('Amount is required'),
-      interestRate: yup.string().required('Interest rate is required'),
+      interestRate: yup.number().required('Interest rate is required'),
       creditor: yup.string().required('Creditor is required'),
       accountStatus: yup
         .mixed()
@@ -125,26 +125,26 @@ const Mutation = {
       type: 'data-dues'
     })
 
-    // fetch if there's a data dues action already
-    // just return it for now, later we will need to update it
-    const [userAction] = await user.$relatedQuery('userActions').where({
-      campaignId: campaign.id,
-      actionId: action.id
-    })
-
-    if (userAction) {
-      return { userAction }
-    }
-
     return validationSchema
       .validate(data, { abortEarly: false, stripUnknown: true })
       .then(async results => {
-        const userAction = await user.$relatedQuery('userActions').insert({
-          actionId: action.id,
+        // fetch if there's a data dues action already
+        let userAction = await user.$relatedQuery('userActions').findOne({
           campaignId: campaign.id,
-          completed: true,
-          data: results
+          actionId: action.id
         })
+
+        // if there's a record, update it
+        if (userAction) {
+          await userAction.$query().patch({ data: results })
+        } else {
+          userAction = await user.$relatedQuery('userActions').insert({
+            actionId: action.id,
+            campaignId: campaign.id,
+            completed: true,
+            data: results
+          })
+        }
 
         return { userAction }
       })
