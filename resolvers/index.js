@@ -4,6 +4,7 @@ const { Campaign } = require('../models/Campaign')
 const { User } = require('../models/User')
 const { UserAction } = require('../models/UserAction')
 const UserActions = require('../resolvers/UserActions')
+const UserCampaign = require('../resolvers/UserCampaign')
 const { setContext } = require('./context')
 const sentryWrapper = require('../lib/sentryWrapper')
 
@@ -83,8 +84,16 @@ const mutationResolvers = {
   }
 }
 
-const allQueryResolvers = _.merge(queryResolvers, UserActions.Query)
-const allMutationResolvers = _.merge(mutationResolvers, UserActions.Mutation)
+const allQueryResolvers = _.merge(
+  queryResolvers,
+  UserActions.Query,
+  UserCampaign.Query
+)
+const allMutationResolvers = _.merge(
+  mutationResolvers,
+  UserActions.Mutation,
+  UserCampaign.Mutation
+)
 
 const allQueryResolversWrapped = sentryWrapper(allQueryResolvers)
 const allMutationResolversWrapped = sentryWrapper(allMutationResolvers)
