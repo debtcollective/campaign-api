@@ -1,4 +1,5 @@
 const Model = require('./BaseModel')
+const { ref } = require('objection')
 
 class UserCampaign extends Model {
   static get tableName () {
@@ -8,7 +9,7 @@ class UserCampaign extends Model {
   static async getUserCountByMotive (motive) {
     const result = await UserCampaign.query()
       .select(['id'])
-      .where('data', { motive })
+      .where(ref('data:motive').castText(), motive)
 
     return result.length
   }
