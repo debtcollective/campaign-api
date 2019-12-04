@@ -93,6 +93,11 @@ const typeDefs = gql`
     userActionUpdate(userActionId: ID!, completed: Boolean): UserAction!
     addUserToCampaign(motive: String!): Ok!
     upsertDataDuesAction(data: JSONObject): UpsertDataDuesActionPayload!
+    upsertUserAction(
+      slug: String!
+      completed: Boolean
+      data: JSONObject
+    ): UserAction!
   }
 
   type UpsertDataDuesActionPayload {

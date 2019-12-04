@@ -33,7 +33,8 @@ describe('UserActions resolvers', () => {
         title: 'Data Dues',
         description:
           'Data dues action where we request user about their debt data',
-        type: 'data-dues'
+        type: 'data-dues',
+        slug: 'data-dues'
       })
 
       user = await User.query().insert({
@@ -189,6 +190,7 @@ describe('UserActions resolvers', () => {
         description: faker.lorem.words(10),
         type: _.sample(['Retweet', 'Link', 'Share']),
         config: { fake_number: faker.random.number() },
+        slug: faker.lorem.words(1),
         campaignId: campaign.id
       })
       actions[1] = await Action.query().insert({
@@ -196,6 +198,7 @@ describe('UserActions resolvers', () => {
         description: faker.lorem.words(10),
         type: _.sample(['Retweet', 'Link', 'Share']),
         config: { fake_number: faker.random.number() },
+        slug: faker.lorem.words(1),
         campaignId: campaign.id
       })
       actions[2] = await Action.query().insert({
@@ -203,6 +206,7 @@ describe('UserActions resolvers', () => {
         description: faker.lorem.words(10),
         type: _.sample(['Retweet', 'Link', 'Share']),
         config: { fake_number: faker.random.number() },
+        slug: faker.lorem.words(1),
         campaignId: campaign.id
       })
 
@@ -271,6 +275,82 @@ describe('UserActions resolvers', () => {
 
       expect(result[0].userActionId).toEqual(userAction.id)
       expect(result[0].actionId).toEqual(firstAction.id)
+    })
+  })
+
+  describe('upsertUserAction', () => {
+    let user
+    let campaign
+    let context
+    let action
+
+    beforeEach(async () => {
+      await UserAction.query().delete()
+      await Action.query().delete()
+      await User.query().delete()
+      await Campaign.query().delete()
+
+      // create test campaign
+      campaign = await Campaign.query().insert({
+        slug: 'end-student-debt',
+        name: 'End Student Debt'
+      })
+
+      action = await Action.query().insert({
+        campaignId: campaign.id,
+        title: 'Contact your Rep',
+        description: 'Contact your Rep',
+        type: 'link',
+        slug: 'contact-your-rep'
+      })
+
+      user = await User.query().insert({
+        email: 'orlando@debtcollective.org',
+        external_id: 1
+      })
+
+      context = { User: user, Campaign: campaign }
+    })
+
+    describe('with no record', () => {
+      it('creates userAction and returns it', async () => {
+        const slug = 'contact-your-rep'
+        const data = { test: true }
+
+        const userAction = await Mutation.upsertUserAction(
+          null,
+          { slug, data },
+          context
+        )
+
+        expect(userAction).not.toBeNull()
+        expect(userAction.id).not.toBeNull()
+        expect(userAction.actionId).toEqual(action.id)
+        expect(userAction.data).toEqual(data)
+      })
+    })
+
+    describe('with existing record', () => {
+      it('updates userAction and returns it', async () => {
+        const userAction = await user.$relatedQuery('userActions').insert({
+          campaignId: campaign.id,
+          actionId: action.id,
+          data: {}
+        })
+        const slug = 'contact-your-rep'
+        const data = { test: true }
+
+        const updatedUserAction = await Mutation.upsertUserAction(
+          null,
+          { slug, data },
+          context
+        )
+
+        expect(updatedUserAction).not.toBeNull()
+        expect(updatedUserAction.id).toEqual(userAction.id)
+        expect(updatedUserAction.actionId).toEqual(action.id)
+        expect(updatedUserAction.data).toEqual(data)
+      })
     })
   })
 })

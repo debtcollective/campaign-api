@@ -118,15 +118,13 @@ const Query = {
 }
 
 const Mutation = {
-  upsertDataDuesAction: async (parent, args, context) => {
-    // get data from args
-    const { data } = args
+  upsertDataDuesAction: async (parent, { data }, context) => {
     const { User: user, Campaign: campaign } = context
 
     // find data dues action for current campaign
-    const [action] = await Action.query().where({
+    const action = await Action.query().findOne({
       campaignId: campaign.id,
-      type: 'data-dues'
+      slug: 'data-dues'
     })
 
     return validationSchema
@@ -159,6 +157,41 @@ const Mutation = {
 
         return { errors }
       })
+  },
+  upsertUserAction: async (parent, { slug, completed, data }, context) => {
+    const { User: user, Campaign: campaign } = context
+
+    // find action for current campaign
+    const action = await Action.query().findOne({
+      campaignId: campaign.id,
+      slug
+    })
+
+    // return null if action not found
+    if (!action) {
+      return null
+    }
+
+    // fetch if there's a userAction already
+    let userAction = await user.$relatedQuery('userActions').findOne({
+      campaignId: campaign.id,
+      actionId: action.id
+    })
+
+    // if there's a record, update it
+    // otherwise create one
+    if (userAction) {
+      await userAction.$query().patch({ completed, data })
+    } else {
+      userAction = await user.$relatedQuery('userActions').insert({
+        actionId: action.id,
+        campaignId: campaign.id,
+        completed,
+        data
+      })
+    }
+
+    return userAction
   }
 }
 
