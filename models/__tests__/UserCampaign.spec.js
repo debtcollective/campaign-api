@@ -3,7 +3,7 @@ const { User } = require('../User')
 const { Campaign } = require('../Campaign')
 const faker = require('faker')
 
-test.skip('retrives the amount of users joined into a campaign for a given motive', async () => {
+test('retrives the amount of users joined into a campaign for a given motive', async () => {
   // Make sure to clean the db before running any assertion
   await User.query().delete()
   await Campaign.query().delete()
