@@ -1,13 +1,22 @@
+const Model = require('../../lib/objection')
 const { UserCampaign } = require('../UserCampaign')
 const { User } = require('../User')
 const { Campaign } = require('../Campaign')
 const faker = require('faker')
 
-test('retrives the amount of users joined into a campaign for a given motive', async () => {
+beforeEach(async () => {
   // Make sure to clean the db before running any assertion
   await User.query().delete()
   await Campaign.query().delete()
+})
 
+afterAll(async () => {
+  await User.query().delete()
+  await Campaign.query().delete()
+  Model.knex().destroy()
+})
+
+test('retrives the amount of users joined into a campaign for a given motive', async () => {
   // Populate db with data that can be use to emulate the flow to test
   await Campaign.query().insert({
     slug: 'a-campaign',
