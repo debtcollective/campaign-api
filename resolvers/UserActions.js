@@ -97,12 +97,10 @@ const Query = {
   userAction: async (root, { slug }, context) => {
     const { Campaign: campaign, User: user } = context
 
-    const action = await campaign
-      .$relatedQuery('actions')
-      .findOne({ slug, campaignId: campaign.id })
+    const action = _.find(campaign.actions, { slug })
 
     if (!action) {
-      return
+      return null
     }
 
     const userAction = await user

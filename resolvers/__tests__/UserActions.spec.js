@@ -281,6 +281,64 @@ describe('UserActions resolvers', () => {
     })
   })
 
+  describe('userAction', () => {
+    let action
+    let userAction
+    let context
+
+    beforeEach(async () => {
+      await UserAction.query().delete()
+      await Action.query().delete()
+      await User.query().delete()
+      await Campaign.query().delete()
+
+      // create test campaign
+      let campaign = await Campaign.query().insert({
+        slug: 'end-student-debt',
+        name: 'End Student Debt'
+      })
+
+      action = await Action.query().insert({
+        campaignId: campaign.id,
+        title: 'Contact your Rep',
+        description: 'Contact your Rep',
+        type: 'link',
+        slug: 'contact-your-rep'
+      })
+
+      const user = await User.query().insert({
+        email: 'orlando@debtcollective.org',
+        external_id: 1
+      })
+
+      userAction = await UserAction.query().insert({
+        userId: user.id,
+        campaignId: campaign.id,
+        actionId: action.id,
+        completed: true,
+        data: { test: true }
+      })
+
+      // fetch eager campaign like we do in context
+      campaign = await Campaign.query()
+        .eager('actions')
+        .findOne({ id: campaign.id })
+
+      context = { User: user, Campaign: campaign }
+    })
+
+    it('returns userAction if found', async () => {
+      const slug = action.slug
+
+      const queryUserAction = await Query.userAction(null, { slug }, context)
+
+      expect(queryUserAction).toBeTruthy()
+      expect(queryUserAction.id).toEqual(userAction.id)
+      expect(queryUserAction.actionId).toEqual(action.id)
+      expect(queryUserAction.data).toEqual(userAction.data)
+    })
+  })
+
   describe('upsertUserAction', () => {
     let user
     let campaign
