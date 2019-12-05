@@ -6,12 +6,17 @@ class UserCampaign extends Model {
     return 'users_campaigns'
   }
 
-  static async getUserCountByMotive (motive) {
+  static async getUserCountByMotive () {
     const result = await UserCampaign.query()
-      .select(['id'])
-      .where(ref('data:motive').castText(), motive)
+      .select(
+        ref('users_campaigns.data:motive')
+          .castText()
+          .as('motive')
+      )
+      .groupBy('motive')
+      .count('id')
 
-    return result.length
+    return result
   }
 }
 

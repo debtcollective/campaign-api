@@ -37,6 +37,7 @@ test('retrives the amount of users joined into a campaign for a given motive', a
 
   // Setup variables to make the final assertion
   const motive = 'already-on-strike'
+  const randomMotive = faker.random.word()
   const users = Array(3)
   users[0] = await User.query()
     .where('external_id', 1)
@@ -62,8 +63,19 @@ test('retrives the amount of users joined into a campaign for a given motive', a
 
   await users[2].$relatedQuery('campaigns').relate({
     ...campaign,
-    data: { motive: faker.random.word() }
+    data: { motive: randomMotive }
   })
 
-  await expect(UserCampaign.getUserCountByMotive(motive)).resolves.toEqual(2)
+  await expect(UserCampaign.getUserCountByMotive()).resolves.toEqual(
+    expect.arrayContaining([
+      {
+        motive,
+        count: '2'
+      },
+      {
+        motive: randomMotive,
+        count: '1'
+      }
+    ])
+  )
 })
