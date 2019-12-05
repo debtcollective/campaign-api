@@ -178,7 +178,7 @@ describe('UserActions resolvers', () => {
       await Campaign.query().delete()
 
       // Create a base campaign to work with
-      const campaign = await Campaign.query().insert({
+      let campaign = await Campaign.query().insert({
         slug: 'end-student-debt',
         name: 'End Student Debt'
       })
@@ -210,6 +210,11 @@ describe('UserActions resolvers', () => {
         campaignId: campaign.id
       })
 
+      // fetch eager campaign like we do in context
+      campaign = await Campaign.query()
+        .eager('actions')
+        .findOne({ id: campaign.id })
+
       // Create a user to work with
       const user = await User.query().insert({
         email: faker.internet.email(),
@@ -226,9 +231,8 @@ describe('UserActions resolvers', () => {
         User: stubs.currentUser,
         Campaign: stubs.currentCampaign
       }
-      const userId = stubs.currentUser.id
 
-      const result = await Query.getUserActions(null, { userId }, context)
+      const result = await Query.getUserActions(null, {}, context)
 
       result.forEach((item, index) => {
         expect(item.title).toEqual(stubs.actions[index].title)
@@ -241,7 +245,6 @@ describe('UserActions resolvers', () => {
         User: stubs.currentUser,
         Campaign: stubs.currentCampaign
       }
-      const userId = stubs.currentUser.id
 
       // pretend a completed action using `actions[0].id`
       await UserAction.query().insert({
@@ -251,7 +254,7 @@ describe('UserActions resolvers', () => {
         completed: true
       })
 
-      const result = await Query.getUserActions(null, { userId }, context)
+      const result = await Query.getUserActions(null, {}, context)
 
       expect(result[0].completed).toBeTruthy()
     })
@@ -268,10 +271,10 @@ describe('UserActions resolvers', () => {
       const userAction = await UserAction.query().insert({
         actionId: stubs.actions[0].id,
         campaignId: stubs.currentCampaign.id,
-        userId: stubs.currentUser.id
+        userId
       })
 
-      const result = await Query.getUserActions(null, { userId }, context)
+      const result = await Query.getUserActions(null, {}, context)
 
       expect(result[0].userActionId).toEqual(userAction.id)
       expect(result[0].actionId).toEqual(firstAction.id)

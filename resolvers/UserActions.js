@@ -1,7 +1,5 @@
 const yup = require('yup')
 const { Action } = require('../models/Action')
-const { User } = require('../models/User')
-const { Campaign } = require('../models/Campaign')
 const _ = require('lodash')
 
 // Same validations we use in the client
@@ -68,15 +66,13 @@ const validationSchema = yup.object().shape({
 })
 
 const Query = {
-  getUserActions: async (root, { userId }, context) => {
-    const { actions } = await Campaign.query()
-      .findById(context.Campaign.id)
-      .joinEager('actions')
-    const userQuery = await User.query()
-      .findById(userId)
-      .joinEager('userActions')
-      .where('campaignId', context.Campaign.id)
-    const userActions = userQuery ? userQuery.userActions : []
+  getUserActions: async (root, args, context) => {
+    const { Campaign: campaign, User: user } = context
+
+    const actions = campaign.actions || []
+    const userActions = await user
+      .$relatedQuery('userActions')
+      .where({ campaignId: campaign.id })
 
     // TODO: we need to address issue #20
     const result = actions.map(action => {

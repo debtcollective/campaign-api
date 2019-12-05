@@ -73,7 +73,7 @@ const typeDefs = gql`
     currentUser: User!
     campaigns: [Campaign]
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]
-    getUserActions(userId: ID!): [GetUserActionsPayload]
+    getUserActions: [GetUserActionsPayload]
     userAction(slug: String!): UserAction
     getUserCampaignsCountByMotive(motive: String!): Int!
   }
