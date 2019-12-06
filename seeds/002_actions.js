@@ -27,7 +27,7 @@ exports.seed = function (knex) {
       slug: 'strike-on-campus',
       config: {
         href:
-          'https://community.debtcollective.org/t/organizing-to-win-college-for-all/2887'
+          'https://community.debtcollective.org/t/organizing-to-win-college-for-all-on-campus/3312'
       }
     },
     {
