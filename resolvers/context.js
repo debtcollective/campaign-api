@@ -18,7 +18,9 @@ const setContext = async ({ req }) => {
     console.error(err)
   }
 
-  const campaign = await Campaign.query().first()
+  const campaign = await Campaign.query()
+    .eager('actions')
+    .first()
 
   return { User: user, Campaign: campaign }
 }
