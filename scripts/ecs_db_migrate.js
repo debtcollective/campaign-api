@@ -6,9 +6,10 @@ const service = process.env.ECS_SERVICE
 const taskDefinition = `${service}_${cluster}`
 
 if (!cluster || !service) {
-  process.exit(
+  console.log(
     'Both ECS_CLUSTER and ECS_SERVICE env variables need to be present.'
   )
+  process.exit(1)
 }
 
 const overrides = {
@@ -25,14 +26,11 @@ const migrationCommand = `aws ecs run-task --started-by db-migrate --cluster ${c
   overrides
 )}'`
 
-console.log(migrationCommand);
+console.log(migrationCommand)
+;(function () {
+  const child = exec(migrationCommand)
 
-(async function () {
-  try {
-    await exec(migrationCommand)
-  } catch (e) {
-    console.log(e)
-  } finally {
-    process.exit()
-  }
+  child.stdout.on('data', data => console.log(data))
+
+  child.on('exit', code => process.exit(code))
 })()
