@@ -75,6 +75,7 @@ const typeDefs = gql`
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]
     getUserActions(userId: ID!): [GetUserActionsPayload]
     userAction(slug: String!): UserAction
+    getUserCampaignsCountByMotive(motive: String!): Int!
   }
 
   type GetUserActionsPayload {
