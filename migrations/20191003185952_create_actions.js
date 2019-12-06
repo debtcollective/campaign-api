@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema.createTable('actions', table => {
     table.increments('id').primary()
     table
@@ -15,11 +15,11 @@ exports.up = function(knex) {
     // A way to categorize the action with UI proposes
     table.string('type')
     // A set of arguments needed to built the UI approperly
-    table.jsonb('config')
+    table.jsonb('config').default({})
     table.timestamps(false, true)
   })
 }
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema.dropTableIfExists('actions')
 }

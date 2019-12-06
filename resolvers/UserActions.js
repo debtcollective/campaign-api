@@ -58,7 +58,11 @@ const validationSchema = yup.object().shape({
       accountStatus: yup
         .mixed()
         .oneOf([...accountStatuses, unknown], 'Account status is required'),
-      beingHarrased: yup.string().required('You need to answer this question')
+      beingHarrased: yup.string().required('You need to answer this question'),
+      harrasmentDescription: yup.string().when('beingHarrased', {
+        is: 'true',
+        then: yup.string().required()
+      })
     })
   )
 })
@@ -93,41 +97,56 @@ const Query = {
     })
 
     return _.sortBy(result, 'actionId')
+  },
+  userAction: async (root, { slug }, context) => {
+    const { Campaign: campaign, User: user } = context
+
+    const action = await campaign
+      .$relatedQuery('actions')
+      .findOne({ slug, campaignId: campaign.id })
+
+    if (!action) {
+      return
+    }
+
+    const userAction = await user
+      .$relatedQuery('userActions')
+      .findOne({ actionId: action.id })
+
+    return userAction
   }
 }
 
 const Mutation = {
-  createDataDuesAction: async (parent, args, context) => {
-    // get data from args
-    const { data } = args
+  upsertDataDuesAction: async (parent, { data }, context) => {
     const { User: user, Campaign: campaign } = context
 
     // find data dues action for current campaign
-    const [action] = await Action.query().where({
+    const action = await Action.query().findOne({
       campaignId: campaign.id,
-      type: 'data-dues'
+      slug: 'data-dues'
     })
-
-    // fetch if there's a data dues action already
-    // just return it for now, later we will need to update it
-    const [userAction] = await user.$relatedQuery('userActions').where({
-      campaignId: campaign.id,
-      actionId: action.id
-    })
-
-    if (userAction) {
-      return { userAction }
-    }
 
     return validationSchema
       .validate(data, { abortEarly: false, stripUnknown: true })
       .then(async results => {
-        const userAction = await user.$relatedQuery('userActions').insert({
-          actionId: action.id,
+        // fetch if there's a data dues action already
+        let userAction = await user.$relatedQuery('userActions').findOne({
           campaignId: campaign.id,
-          completed: true,
-          data: results
+          actionId: action.id
         })
+
+        // if there's a record, update it
+        if (userAction) {
+          await userAction.$query().patch({ data: results })
+        } else {
+          userAction = await user.$relatedQuery('userActions').insert({
+            actionId: action.id,
+            campaignId: campaign.id,
+            completed: true,
+            data: results
+          })
+        }
 
         return { userAction }
       })
@@ -138,6 +157,41 @@ const Mutation = {
 
         return { errors }
       })
+  },
+  upsertUserAction: async (parent, { slug, completed, data }, context) => {
+    const { User: user, Campaign: campaign } = context
+
+    // find action for current campaign
+    const action = await Action.query().findOne({
+      campaignId: campaign.id,
+      slug
+    })
+
+    // return null if action not found
+    if (!action) {
+      return null
+    }
+
+    // fetch if there's a userAction already
+    let userAction = await user.$relatedQuery('userActions').findOne({
+      campaignId: campaign.id,
+      actionId: action.id
+    })
+
+    // if there's a record, update it
+    // otherwise create one
+    if (userAction) {
+      await userAction.$query().patch({ completed, data })
+    } else {
+      userAction = await user.$relatedQuery('userActions').insert({
+        actionId: action.id,
+        campaignId: campaign.id,
+        completed,
+        data
+      })
+    }
+
+    return userAction
   }
 }
 

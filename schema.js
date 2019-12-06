@@ -30,6 +30,8 @@ const typeDefs = gql`
     campaignId: ID!
     "title of the action"
     title: String!
+    "action slug"
+    slug: String!
     "description of the action"
     description: String!
     "define the type of UI to render"
@@ -58,6 +60,8 @@ const typeDefs = gql`
     completed: Boolean!
     "common data related to the action"
     action: Action
+    " JSONB data"
+    data: JSONObject
   }
 
   type Ok {
@@ -70,6 +74,7 @@ const typeDefs = gql`
     campaigns: [Campaign]
     userCampaignsActions(userId: ID!, campaignId: ID!): [Action]
     getUserActions(userId: ID!): [GetUserActionsPayload]
+    userAction(slug: String!): UserAction
     getUserCampaignsCountByMotive(motive: String!): Int!
   }
 
@@ -82,15 +87,21 @@ const typeDefs = gql`
     type: String!
     config: JSONObject
     completed: Boolean!
+    slug: String!
   }
 
   type Mutation {
     userActionUpdate(userActionId: ID!, completed: Boolean): UserAction!
     addUserToCampaign(motive: String!): Ok!
-    createDataDuesAction(data: JSONObject): CreateDataDuesActionPayload!
+    upsertDataDuesAction(data: JSONObject): UpsertDataDuesActionPayload!
+    upsertUserAction(
+      slug: String!
+      completed: Boolean
+      data: JSONObject
+    ): UserAction!
   }
 
-  type CreateDataDuesActionPayload {
+  type UpsertDataDuesActionPayload {
     errors: JSONObject
     userAction: UserAction
   }
