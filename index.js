@@ -62,8 +62,10 @@ Sentry.init({
   dsn: process.env.SENTRY_DSN
 })
 
+const originSafelist = (process.env.CORS_ORIGIN || '').split(',')
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
+  origin: originSafelist,
   credentials: true
 }
 
