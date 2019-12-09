@@ -1,8 +1,8 @@
 const { UserCampaign } = require('../models/UserCampaign')
 
 const Query = {
-  getUserCampaignsCountByMotive: async (root, { motive }, context) => {
-    return UserCampaign.getUserCountByMotive(motive)
+  getUserCampaignsCountByMotive: async (root, args, context) => {
+    return UserCampaign.getUserCountByMotive()
   }
 }
 
