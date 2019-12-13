@@ -56,7 +56,7 @@ describe('UserActions resolvers', () => {
               creditor: 'Sallie Mae',
               debtType: 'Student debt',
               interestRate: '4.53',
-              studentDebtType: 'Subsidized Stafford'
+              studentDebtType: 'Federal loan'
             }
           ],
           email: 'betsy.devos@ed.gov',
@@ -138,7 +138,7 @@ describe('UserActions resolvers', () => {
               beingHarrased: 'true',
               creditor: 'Sallie Mae',
               debtType: 'Student debt',
-              studentDebtType: 'Parent PLUS',
+              studentDebtType: 'Parent Plus loan',
               interestRate: '4.53',
               harrasmentDescription: "I'm being harrased"
             }
