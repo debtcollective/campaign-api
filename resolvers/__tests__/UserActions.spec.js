@@ -107,7 +107,7 @@ describe('UserActions resolvers', () => {
         expect(payload.errors).not.toBeNull()
         expect(payload.errors).toEqual([
           { field: 'debts[0].debtType', message: 'Debt type is required' },
-          { field: 'debts[0].creditor', message: 'Creditor is required' },
+          { field: 'debts[0].creditor', message: 'This field is required' },
           {
             field: 'debts[0].beingHarrased',
             message: 'You need to answer this question'
