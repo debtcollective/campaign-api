@@ -19,11 +19,13 @@ const queryResolvers = {
    * Retrive user using Cookies
    */
   currentUser: async (root, args, context) => {
-    if (!context.User.external_id) {
+    const { User: user } = context
+
+    if (!user || !user.external_id) {
       throw new AuthenticationError('No user logged in')
     }
 
-    return context.User
+    return user
   },
   /**
    * Retrieve all the campaigns alongside its actions
