@@ -70,7 +70,7 @@ afterAll(async () => {
   Model.knex().destroy()
 })
 
-describe.skip('Query resolvers', () => {
+describe('Query resolvers', () => {
   it('returns all campaigns with #campaigns method', async () => {
     const campaigns = await queryResolvers.campaigns()
     const campaignIds = _.map(campaigns, 'id').sort()
@@ -94,28 +94,6 @@ describe.skip('Query resolvers', () => {
     expect(actionsIds).toEqual(targetedCampaignActionsIds)
   })
 
-  it("returns the 'UserActions' for a given user", async () => {
-    const userActions = await queryResolvers.userActions(null, {
-      userId: stubs.user.id
-    })
-    const userActionsIds = _.map(userActions, 'id').sort()
-    const stubUserActionsIds = _.map(stubs.userActions, 'id').sort()
-
-    expect(userActionsIds).toEqual(stubUserActionsIds)
-  })
-
-  it("returns the 'UserActions' for a given user filtered by campaignId", async () => {
-    const userActions = await queryResolvers.userActions(null, {
-      userId: stubs.user.id,
-      campaignId: stubs.campaigns[2].id
-    })
-    const userActionsIds = _.map(userActions, 'id').sort()
-    const stubUserActionsIds = [stubs.userActions[1].id]
-
-    expect(userActions).toHaveLength(1)
-    expect(userActionsIds).toEqual(stubUserActionsIds)
-  })
-
   it("returns the injected 'User' as a context with #currentUser", async () => {
     const context = {
       User: createUser({ external_id: faker.random.number() })
@@ -137,7 +115,7 @@ describe.skip('Query resolvers', () => {
   })
 })
 
-describe.skip('Mutation resolvers', () => {
+describe('Mutation resolvers', () => {
   it('allows to update the completed value with #userActionUpdate', async () => {
     const actionId = stubs.campaigns[0].actions[1].id
     const campaignId = stubs.campaigns[0].id
