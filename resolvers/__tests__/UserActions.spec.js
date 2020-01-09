@@ -7,7 +7,13 @@ const { Mutation, Query } = require('../UserActions')
 const faker = require('faker')
 const _ = require('lodash')
 
-afterAll(() => Model.knex().destroy())
+afterAll(async () => {
+  await UserAction.query().delete()
+  await Action.query().delete()
+  await User.query().delete()
+  await Campaign.query().delete()
+  Model.knex().destroy()
+})
 
 describe('UserActions resolvers', () => {
   describe('upsertDataDuesAction', () => {
