@@ -67,7 +67,21 @@ describe('UserActions resolvers', () => {
           ],
           email: 'betsy.devos@ed.gov',
           fullName: 'Betsy DeVos',
-          phoneNumber: '(202) 401-3000'
+          phoneNumber: '(202) 401-3000',
+          address: {
+            name: '400 Maryland Avenue Southwest',
+            administrative: 'District of Columbia',
+            city: 'Washington',
+            suburb: 'Penn Quarter',
+            country: 'United States of America',
+            countryCode: 'us',
+            type: 'address',
+            latlng: { lat: 38.884, lng: -77.03 },
+            postcode: '20202',
+            postcodes: ['20250', '20024', '20202', '20585', '20546', '20001'],
+            value:
+              '400 Maryland Avenue Southwest, Washington, District of Columbia, United States of America'
+          }
         }
 
         const payload = await Mutation.upsertDataDuesAction(
@@ -99,7 +113,21 @@ describe('UserActions resolvers', () => {
           ],
           email: 'betsy.devos@ed.gov',
           fullName: 'Betsy DeVos',
-          phoneNumber: '(202) 401-3000'
+          phoneNumber: '(202) 401-3000',
+          address: {
+            name: '400 Maryland Avenue Southwest',
+            administrative: 'District of Columbia',
+            city: 'Washington',
+            suburb: 'Penn Quarter',
+            country: 'United States of America',
+            countryCode: 'us',
+            type: 'address',
+            latlng: { lat: 38.884, lng: -77.03 },
+            postcode: '20202',
+            postcodes: ['20250', '20024', '20202', '20585', '20546', '20001'],
+            value:
+              '400 Maryland Avenue Southwest, Washington, District of Columbia, United States of America'
+          }
         }
 
         const payload = await Mutation.upsertDataDuesAction(
@@ -149,7 +177,20 @@ describe('UserActions resolvers', () => {
               harrasmentDescription: "I'm being harrased"
             }
           ],
-          streetAddress: '400 Maryland Avenue, SW. Washington, DC 20202',
+          address: {
+            name: '400 Maryland Avenue Southwest',
+            administrative: 'District of Columbia',
+            city: 'Washington',
+            suburb: 'Penn Quarter',
+            country: 'United States of America',
+            countryCode: 'us',
+            type: 'address',
+            latlng: { lat: 38.884, lng: -77.03 },
+            postcode: '20202',
+            postcodes: ['20250', '20024', '20202', '20585', '20546', '20001'],
+            value:
+              '400 Maryland Avenue Southwest, Washington, District of Columbia, United States of America'
+          },
           email: 'betsy.devos@ed.gov',
           fullName: 'Betsy DeVos',
           phoneNumber: '(202) 401-3000'
