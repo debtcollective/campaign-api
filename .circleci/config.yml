@@ -19,12 +19,13 @@ jobs:
           DB_HOST: localhost
           DB_NAME: campaign_api_test
           DB_USER: postgres
+          DB_PASS: letmein
           NODE_ENV: test
       - image: postgres:10
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: campaign_api_test
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: letmein
     steps:
       - checkout
 
