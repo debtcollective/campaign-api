@@ -1,8 +1,18 @@
 const Model = require('../../lib/objection')
 const { Campaign } = require('../../models/Campaign')
 const { User } = require('../../models/User')
-const { mutationResolvers } = require('../')
 const { createCampaign, createUser } = require('../../models/stubs')
+
+// mock discourse request to assign badge
+// we assert this call in the test
+// https://jestjs.io/docs/en/bypassing-module-mocks
+jest.mock('../../lib/discourse', () => ({
+  badges: {
+    assignBadgeToUser: jest.fn()
+  }
+}))
+const discourse = require('../../lib/discourse')
+const { mutationResolvers } = require('../')
 
 afterAll(() => Model.knex().destroy())
 
@@ -17,7 +27,9 @@ afterEach(async () => {
 })
 
 describe('#addUserToCampaign', () => {
-  it.skip('links a user to a campaign if it doesnt have one yet', async () => {
+  beforeEach(() => jest.clearAllMocks())
+
+  it('links a user to a campaign if it doesnt have one yet', async () => {
     const responses = Array(2)
     const originalMotive = 'already-on-strike'
     const userData = createUser()
@@ -50,5 +62,10 @@ describe('#addUserToCampaign', () => {
     expect(targetedUser.campaigns[0].data).toEqual(
       expect.objectContaining({ motive: originalMotive })
     )
+    expect(discourse.badges.assignBadgeToUser).toHaveBeenCalledTimes(1)
+    expect(discourse.badges.assignBadgeToUser).toHaveBeenCalledWith({
+      badge_id: process.env.DISCOURSE_BADGE_ID,
+      username: user.username
+    })
   })
 })
