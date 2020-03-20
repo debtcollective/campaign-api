@@ -4,6 +4,7 @@ module.exports = {
   createUser: fixedData => ({
     email: faker.internet.email(),
     external_id: faker.random.number(),
+    username: faker.internet.userName(),
     ...fixedData
   }),
   createCampaign: fixedData => ({

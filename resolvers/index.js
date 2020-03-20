@@ -6,7 +6,9 @@ const { UserAction } = require('../models/UserAction')
 const UserActions = require('../resolvers/UserActions')
 const UserCampaign = require('../resolvers/UserCampaign')
 const { setContext } = require('./context')
+const Sentry = require('@sentry/node')
 const sentryWrapper = require('../lib/sentryWrapper')
+const discourse = require('../lib/discourse')
 
 const queryResolvers = {
   /**
@@ -68,6 +70,7 @@ const mutationResolvers = {
   addUserToCampaign: async (root, { motive }, context) => {
     const { id } = context.User
     const campaign = context.Campaign
+
     // NOTE: we need to fetch the user again cause context doesn't have the full tree
     const user = await User.query()
       .findById(id)
@@ -81,6 +84,16 @@ const mutationResolvers = {
       ...campaign,
       data: { motive }
     })
+
+    // grant user discourse badge
+    try {
+      await discourse.badges.assignBadgeToUser({
+        badge_id: process.env.DISCOURSE_BADGE_ID,
+        username: user.username
+      })
+    } catch (e) {
+      Sentry.captureException(e)
+    }
 
     return { ok: true }
   }
