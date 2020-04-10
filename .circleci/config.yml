@@ -181,12 +181,12 @@ jobs:
           command: |
             docker push debtcollective/campaign-api:$CIRCLE_TAG
 
-  deploy_stage:
+  deploy_prod:
     working_directory: ~/app
     docker:
       - image: circleci/node:12.10.0
         environment:
-          ECS_CLUSTER: stage
+          ECS_CLUSTER: prod
           ECS_SERVICE: campaign_api
     steps:
       - checkout
@@ -228,9 +228,16 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy_stage:
+      - deploy_prod_approval:
+        type: approval
+        requires:
+          - publish_latest
+        filters:
+          branches:
+            only: master
+      - deploy_prod:
           requires:
-            - publish_latest
+            - deploy_prod_approval
           filters:
             branches:
               only: master
