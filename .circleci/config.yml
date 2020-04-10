@@ -229,12 +229,12 @@ workflows:
             branches:
               only: master
       - deploy_prod_approval:
-        type: approval
-        requires:
-          - publish_latest
-        filters:
-          branches:
-            only: master
+          type: approval
+          requires:
+            - publish_latest
+          filters:
+            branches:
+              only: master
       - deploy_prod:
           requires:
             - deploy_prod_approval
