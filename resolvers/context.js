@@ -6,8 +6,11 @@ const { Campaign } = require('../models/Campaign')
 const setContext = async ({ req }) => {
   let user = null
 
+  const campaign = await Campaign.query().eager('actions').first()
+
   try {
     const authCookieName = process.env.SSO_COOKIE_NAME
+
     const cookies = cookie.parse(req.headers.cookie)
     const authToken = cookies[authCookieName]
     const payload = jwt.verify(authToken, process.env.SSO_JWT_SECRET)
@@ -17,10 +20,6 @@ const setContext = async ({ req }) => {
     // eslint-disable-next-line no-console
     console.error(err)
   }
-
-  const campaign = await Campaign.query()
-    .eager('actions')
-    .first()
 
   return { User: user, Campaign: campaign }
 }

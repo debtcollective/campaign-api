@@ -35,7 +35,7 @@ const resolvers = {
   },
   // Allow to append action data into the UserAction request
   UserAction: {
-    action: async userAction => {
+    action: async (userAction) => {
       const { actionId } = userAction
       const result = await Action.query().findById(actionId)
       return result
@@ -43,10 +43,8 @@ const resolvers = {
   },
   // Allow to append campaigns data into User request
   User: {
-    campaigns: async user => {
-      const result = await User.query()
-        .findById(user.id)
-        .joinEager('campaigns')
+    campaigns: async (user) => {
+      const result = await User.query().findById(user.id).joinEager('campaigns')
 
       if (result) {
         return result.campaigns
@@ -73,8 +71,8 @@ const server = new ApolloServer({
   cors: corsOptions,
   typeDefs,
   resolvers,
-  introspection: process.env.INTROSPECTION,
-  playground: process.env.PLAYGROUND,
+  introspection: process.env.INTROSPECTION === 'true',
+  playground: process.env.PLAYGROUND === 'true',
   context: setContext
 })
 
