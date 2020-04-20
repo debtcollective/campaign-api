@@ -62,6 +62,16 @@ exports.seed = function (knex) {
         href:
           'https://community.debtcollective.org/t/contribute-your-ideas-to-the-college-for-all-campaign/3468'
       }
+    },
+    {
+      campaign_id: 1,
+      title: 'Volunteer with The Debt Collective',
+      description: 'Volunteer with The Debt Collective',
+      type: 'link',
+      slug: 'volunteer-with-the-debt-collective',
+      config: {
+        href: 'https://volunteer.debtcollective.org'
+      }
     }
   ])
 }
