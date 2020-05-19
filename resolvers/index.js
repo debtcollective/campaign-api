@@ -9,6 +9,7 @@ const { setContext } = require('./context')
 const Sentry = require('@sentry/node')
 const sentryWrapper = require('../lib/sentryWrapper')
 const discourse = require('../lib/discourse')
+const mailchimp = require('../lib/mailchimp')
 
 const queryResolvers = {
   /**
@@ -68,13 +69,11 @@ const mutationResolvers = {
     return userAction
   },
   addUserToCampaign: async (root, { motive }, context) => {
-    const { id } = context.User
+    const { id, email } = context.User
     const campaign = context.Campaign
 
     // NOTE: we need to fetch the user again cause context doesn't have the full tree
-    const user = await User.query()
-      .findById(id)
-      .joinEager('campaigns')
+    const user = await User.query().findById(id).joinEager('campaigns')
 
     if (user.campaigns && user.campaigns.length) {
       return { ok: false }
@@ -94,6 +93,14 @@ const mutationResolvers = {
     } catch (e) {
       Sentry.captureException(e)
     }
+
+    // upsert user in mailchimp
+    // don't await for this
+    mailchimp.addTagsToContact({
+      email,
+      list_id: process.env.MAILCHIMP_LIST_ID,
+      tags: (process.env.MAILCHIMP_TAGS || '').split(',')
+    })
 
     return { ok: true }
   }
