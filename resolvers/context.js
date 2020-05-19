@@ -6,12 +6,13 @@ const { Campaign } = require('../models/Campaign')
 const setContext = async ({ req }) => {
   let user = null
 
-  const campaign = await Campaign.query().eager('actions').first()
+  const campaign = await Campaign.query()
+    .eager('actions')
+    .first()
 
   try {
     const authCookieName = process.env.SSO_COOKIE_NAME
-
-    const cookies = cookie.parse(req.headers.cookie)
+    const cookies = cookie.parse(req.headers.cookie || '')
     const authToken = cookies[authCookieName]
     const payload = jwt.verify(authToken, process.env.SSO_JWT_SECRET)
 

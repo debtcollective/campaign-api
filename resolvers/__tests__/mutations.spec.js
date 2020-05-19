@@ -11,7 +11,12 @@ jest.mock('../../lib/discourse', () => ({
     assignBadgeToUser: jest.fn()
   }
 }))
+
+jest.mock('../../lib/mailchimp', () => ({
+  addTagsToContact: jest.fn()
+}))
 const discourse = require('../../lib/discourse')
+const mailchimp = require('../../lib/mailchimp')
 const { mutationResolvers } = require('../')
 
 afterAll(() => Model.knex().destroy())
@@ -67,5 +72,7 @@ describe('#addUserToCampaign', () => {
       badge_id: process.env.DISCOURSE_BADGE_ID,
       username: user.username
     })
+
+    expect(mailchimp.addTagsToContact).toHaveBeenCalledTimes(1)
   })
 })
