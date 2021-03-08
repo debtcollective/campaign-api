@@ -3,7 +3,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
 [![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](#)
-[![Twitter: 0debtzone](https://img.shields.io/twitter/follow/0debtzone.svg?style=social)](https://twitter.com/0debtzone)
+[![Twitter: StrikeDebt](https://img.shields.io/twitter/follow/StrikeDebt.svg?style=social)](https://twitter.com/StrikeDebt)
 
 > This service makes relations between users and campaigns of your organizations, those campaigns have actions that help to promote the awareness of your initiatives.
 
