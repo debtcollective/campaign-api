@@ -62,7 +62,7 @@
     "lint-staged": ">=8",
     "nodemon": "1.19.4",
     "pg-escape": "0.2.0",
-    "semantic-release": "15.13.30"
+    "semantic-release": "17.2.3"
   },
   "husky": {
     "hooks": {
