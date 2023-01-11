@@ -37,7 +37,7 @@
     "graphql": "^14.5.8",
     "graphql-type-json": "^0.3.0",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.19.5",
+    "knex": "^2.4.0",
     "lodash": "4.17.19",
     "objection": "^1.6.11",
     "pg": "^7.12.1",
